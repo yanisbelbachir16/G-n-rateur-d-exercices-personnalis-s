@@ -5,557 +5,141 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Générateur d'exercices — Mathématiques Collège</title>
 <style>
-  :root {
-    --blue-dark: #0C447C;
-    --blue-main: #185FA5;
-    --blue-mid: #378ADD;
-    --blue-light: #B5D4F4;
-    --blue-pale: #E6F1FB;
-    --green-dark: #27500A;
-    --green-main: #3B6D11;
-    --green-light: #C0DD97;
-    --green-pale: #EAF3DE;
-    --amber-dark: #633806;
-    --amber-main: #854F0B;
-    --amber-light: #FAC775;
-    --amber-pale: #FAEEDA;
-    --coral-dark: #712B13;
-    --coral-main: #993C1D;
-    --coral-light: #F0997B;
-    --coral-pale: #FAECE7;
-    --gray-900: #1a1a1a;
-    --gray-700: #3d3d3d;
-    --gray-500: #6b6b6b;
-    --gray-300: #c4c4c4;
-    --gray-100: #f4f4f4;
-    --gray-50: #fafafa;
-    --white: #ffffff;
-    --radius: 8px;
-    --radius-lg: 12px;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f0f4f8;
-    color: var(--gray-900);
-    min-height: 100vh;
-  }
-
-  /* TOP NAV */
-  .topnav {
-    background: var(--blue-main);
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    height: 56px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .topnav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #fff;
-    font-weight: 600;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-  }
-  .topnav-logo .ico {
-    width: 30px; height: 30px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  .topnav-sub {
-    margin-left: auto;
-    font-size: 12px;
-    color: var(--blue-light);
-  }
-
-  /* LAYOUT */
-  .page {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
-    display: grid;
-    grid-template-columns: 340px 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
-
-  /* PANEL GAUCHE */
-  .panel-left {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .card {
-    background: var(--white);
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-  }
-
-  .card-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gray-500);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-bottom: 0.875rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .card-title svg { flex-shrink: 0; }
-
-  /* NIVEAU */
-  .level-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .level-btn {
-    border: 1.5px solid #e2e8f0;
-    border-radius: var(--radius);
-    background: var(--gray-50);
-    padding: 12px 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .level-btn:hover { border-color: var(--blue-light); background: var(--blue-pale); }
-  .level-btn.active {
-    border-color: var(--blue-main);
-    background: var(--blue-pale);
-    border-width: 2px;
-  }
-  .level-btn .lbl { font-size: 15px; font-weight: 600; color: var(--gray-700); }
-  .level-btn .sub { font-size: 11px; color: var(--gray-500); }
-  .level-btn.active .lbl { color: var(--blue-dark); }
-  .level-btn .ico-lvl { font-size: 22px; margin-bottom: 2px; }
-
-  /* NOTIONS */
-  .notions-list {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .notion-chip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--gray-700);
-    background: var(--gray-50);
-    transition: all 0.12s;
-    user-select: none;
-  }
-  .notion-chip:hover { border-color: var(--blue-light); background: var(--blue-pale); }
-  .notion-chip.active {
-    border-color: var(--blue-main);
-    background: var(--blue-pale);
-    color: var(--blue-dark);
-    font-weight: 500;
-  }
-  .notion-chip .chk {
-    width: 16px; height: 16px;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 4px;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.12s;
-    background: var(--white);
-  }
-  .notion-chip.active .chk {
-    background: var(--blue-main);
-    border-color: var(--blue-main);
-  }
-  .notion-chip.active .chk::after {
-    content: '';
-    width: 9px; height: 5px;
-    border-left: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    transform: rotate(-45deg) translateY(-1px);
-    display: block;
-  }
-  .notions-empty {
-    font-size: 13px;
-    color: var(--gray-500);
-    text-align: center;
-    padding: 1rem 0;
-  }
-  .notions-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 8px;
-  }
-  .btn-link {
-    font-size: 12px;
-    color: var(--blue-mid);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0;
-  }
-
-  /* NB + DIFF */
-  .nb-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-  .nb-label { font-size: 13px; color: var(--gray-700); flex: 1; }
-  .nb-ctrl { display: flex; align-items: center; gap: 8px; }
-  .nb-btn {
-    width: 30px; height: 30px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: var(--gray-50);
-    font-size: 18px;
-    color: var(--gray-700);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.12s;
-    line-height: 1;
-  }
-  .nb-btn:hover { border-color: var(--blue-light); background: var(--blue-pale); color: var(--blue-main); }
-  .nb-val { font-size: 18px; font-weight: 600; color: var(--gray-900); min-width: 24px; text-align: center; }
-
-  .diff-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .diff-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: var(--radius);
-    background: var(--gray-50);
-    cursor: pointer;
-    transition: all 0.12s;
-    text-align: left;
-  }
-  .diff-btn:hover { border-color: var(--gray-300); background: var(--gray-100); }
-  .diff-btn .diff-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .diff-btn .diff-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
-  .diff-btn .diff-sub { font-size: 11px; color: var(--gray-500); }
-  .diff-btn.active-easy { border-color: var(--green-main); background: var(--green-pale); }
-  .diff-btn.active-easy .diff-name { color: var(--green-dark); }
-  .diff-btn.active-medium { border-color: var(--amber-main); background: var(--amber-pale); }
-  .diff-btn.active-medium .diff-name { color: var(--amber-dark); }
-  .diff-btn.active-hard { border-color: var(--coral-main); background: var(--coral-pale); }
-  .diff-btn.active-hard .diff-name { color: var(--coral-dark); }
-  .dot-easy { background: var(--green-main); }
-  .dot-medium { background: var(--amber-main); }
-  .dot-hard { background: var(--coral-main); }
-
-  /* CLE API */
-  .api-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .api-row input {
-    flex: 1;
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius);
-    padding: 8px 10px;
-    font-size: 13px;
-    color: var(--gray-900);
-    background: var(--gray-50);
-    font-family: monospace;
-  }
-  .api-row input:focus { outline: none; border-color: var(--blue-mid); background: var(--white); }
-  .api-toggle { font-size: 11px; color: var(--blue-mid); cursor: pointer; white-space: nowrap; }
-  .api-hint { font-size: 11px; color: var(--gray-500); margin-top: 6px; line-height: 1.5; }
-  .api-hint a { color: var(--blue-mid); }
-
-  /* BTN GENERER */
-  .btn-generate {
-    width: 100%;
-    padding: 13px;
-    background: var(--blue-main);
-    border: none;
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    letter-spacing: 0.01em;
-  }
-  .btn-generate:hover { background: var(--blue-dark); }
-  .btn-generate:disabled { background: var(--gray-300); cursor: not-allowed; }
-
-  /* PANEL DROIT */
-  .panel-right { }
-
-  .result-placeholder {
-    background: var(--white);
-    border: 1.5px dashed #cbd5e1;
-    border-radius: var(--radius-lg);
-    padding: 4rem 2rem;
-    text-align: center;
-    color: var(--gray-500);
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  .result-placeholder .ico-big { font-size: 40px; opacity: 0.3; }
-
-  .result-card {
-    background: var(--white);
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    display: none;
-  }
-
-  /* EN-TETE SUJET */
-  .sujet-header {
-    background: var(--blue-main);
-    padding: 1.5rem 1.75rem;
-    color: #fff;
-    position: relative;
-  }
-  .sujet-etab { font-size: 11px; color: var(--blue-light); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
-  .sujet-titre { font-size: 17px; font-weight: 600; color: #fff; margin-bottom: 2px; }
-  .sujet-notions { font-size: 12px; color: var(--blue-light); }
-  .sujet-meta-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    font-size: 12px;
-    color: var(--blue-light);
-  }
-  .badge-diff {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .badge-easy { background: var(--green-pale); color: var(--green-dark); }
-  .badge-medium { background: var(--amber-pale); color: var(--amber-dark); }
-  .badge-hard { background: var(--coral-pale); color: var(--coral-dark); }
-
-  /* IDENTITE ELEVE */
-  .sujet-identite {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
-    padding: 1rem 1.75rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  .id-field { }
-  .id-line { border-bottom: 1.5px solid var(--gray-300); padding-bottom: 2px; margin-top: 18px; }
-  .id-label { font-size: 11px; color: var(--gray-500); }
-
-  /* EXERCICES */
-  .sujet-body { padding: 0.5rem 1.75rem 1.75rem; }
-  .exercise-item {
-    padding: 1.125rem 0;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  .exercise-item:last-child { border-bottom: none; }
-  .ex-num {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--blue-main);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
-  }
-  .ex-num::before {
-    content: '';
-    display: inline-block;
-    width: 3px; height: 14px;
-    background: var(--blue-main);
-    border-radius: 2px;
-  }
-  .ex-enonce {
-    font-size: 14px;
-    color: var(--gray-900);
-    line-height: 1.75;
-  }
-  .ex-espace {
-    margin-top: 12px;
-    border: 1px dashed #cbd5e1;
-    border-radius: var(--radius);
-    min-height: 70px;
-    background: #f8fafc;
-  }
-
-  /* ACTIONS SUJET */
-  .sujet-actions {
-    display: flex;
-    gap: 8px;
-    padding: 1rem 1.75rem;
-    border-top: 1px solid #e2e8f0;
-    background: var(--gray-50);
-  }
-  .btn-action {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: var(--radius);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.12s;
-    border: 1px solid;
-  }
-  .btn-print {
-    background: var(--green-pale);
-    border-color: var(--green-light);
-    color: var(--green-dark);
-  }
-  .btn-print:hover { background: var(--green-light); }
-  .btn-regen {
-    background: var(--gray-100);
-    border-color: #e2e8f0;
-    color: var(--gray-700);
-  }
-  .btn-regen:hover { background: var(--blue-pale); border-color: var(--blue-light); color: var(--blue-dark); }
-
-  /* LOADING */
-  .loading-state {
-    display: none;
-    background: var(--white);
-    border: 1px solid #e2e8f0;
-    border-radius: var(--radius-lg);
-    padding: 4rem 2rem;
-    text-align: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid var(--blue-pale);
-    border-top-color: var(--blue-main);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-txt { font-size: 14px; color: var(--gray-500); }
-
-  /* STEPS INDICATOR */
-  .steps-bar {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 1rem;
-  }
-  .step-dot {
-    flex: 1; height: 4px;
-    border-radius: 2px;
-    background: #e2e8f0;
-    transition: background 0.3s;
-  }
-  .step-dot.done { background: var(--green-main); }
-  .step-dot.active { background: var(--blue-main); }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--gray-900);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: transform 0.3s;
-    z-index: 999;
-    white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .page { grid-template-columns: 1fr; }
-    .sujet-identite { grid-template-columns: 1fr 1fr; }
-  }
-
-  @media print {
-    .topnav, .panel-left, .sujet-actions, .toast { display: none !important; }
-    body { background: #fff; }
-    .page { display: block; padding: 0; }
-    .panel-right { display: block !important; }
-    .result-card { display: block !important; border: none; box-shadow: none; }
-    .loading-state { display: none !important; }
-    .result-placeholder { display: none !important; }
-    .exercise-item { page-break-inside: avoid; }
-  }
+:root {
+  --blue-dark: #0C447C;
+  --blue-main: #185FA5;
+  --blue-mid: #378ADD;
+  --blue-light: #B5D4F4;
+  --blue-pale: #E6F1FB;
+  --green-dark: #27500A;
+  --green-main: #3B6D11;
+  --green-light: #C0DD97;
+  --green-pale: #EAF3DE;
+  --amber-dark: #633806;
+  --amber-pale: #FAEEDA;
+  --coral-dark: #712B13;
+  --coral-main: #993C1D;
+  --coral-pale: #FAECE7;
+  --gray-900: #1a1a1a;
+  --gray-700: #3d3d3d;
+  --gray-500: #6b6b6b;
+  --gray-300: #c4c4c4;
+  --gray-100: #f4f4f4;
+  --gray-50: #fafafa;
+  --white: #ffffff;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f4f8;color:var(--gray-900);min-height:100vh}
+.topnav{background:var(--blue-main);padding:0 2rem;display:flex;align-items:center;height:56px;position:sticky;top:0;z-index:100}
+.topnav-logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:15px}
+.topnav-ico{width:30px;height:30px;background:rgba(255,255,255,0.15);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.topnav-sub{margin-left:auto;font-size:12px;color:var(--blue-light)}
+.page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:320px 1fr;gap:1.5rem;align-items:start}
+.panel-left{display:flex;flex-direction:column;gap:1rem}
+.card{background:var(--white);border:1px solid #e2e8f0;border-radius:var(--radius-lg);padding:1.25rem}
+.card-title{font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.875rem;display:flex;align-items:center;gap:6px}
+.steps-bar{display:flex;gap:4px}
+.step-dot{flex:1;height:4px;border-radius:2px;background:#e2e8f0;transition:background .3s}
+.step-dot.done{background:var(--green-main)}
+.step-dot.active{background:var(--blue-main)}
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.level-btn{border:1.5px solid #e2e8f0;border-radius:var(--radius);background:var(--gray-50);padding:12px 10px;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.level-btn:hover{border-color:var(--blue-light);background:var(--blue-pale)}
+.level-btn.active{border-color:var(--blue-main);background:var(--blue-pale);border-width:2px}
+.level-btn .lbl{font-size:15px;font-weight:600;color:var(--gray-700)}
+.level-btn .sub{font-size:11px;color:var(--gray-500)}
+.level-btn.active .lbl{color:var(--blue-dark)}
+.level-btn .ico-lvl{font-size:22px;margin-bottom:2px}
+.notions-list{display:flex;flex-direction:column;gap:5px}
+.notion-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #e2e8f0;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--gray-700);background:var(--gray-50);transition:all .12s;user-select:none}
+.notion-chip:hover{border-color:var(--blue-light);background:var(--blue-pale)}
+.notion-chip.active{border-color:var(--blue-main);background:var(--blue-pale);color:var(--blue-dark);font-weight:500}
+.notion-chip .chk{width:16px;height:16px;border:1.5px solid var(--gray-300);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s;background:var(--white)}
+.notion-chip.active .chk{background:var(--blue-main);border-color:var(--blue-main)}
+.notion-chip.active .chk::after{content:'';width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
+.notions-empty{font-size:13px;color:var(--gray-500);text-align:center;padding:1rem 0}
+.btn-link{font-size:12px;color:var(--blue-mid);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+.nb-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.nb-label{font-size:13px;color:var(--gray-700);flex:1}
+.nb-ctrl{display:flex;align-items:center;gap:8px}
+.nb-btn{width:30px;height:30px;border:1px solid #e2e8f0;border-radius:6px;background:var(--gray-50);font-size:18px;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;line-height:1}
+.nb-btn:hover{border-color:var(--blue-light);background:var(--blue-pale);color:var(--blue-main)}
+.nb-val{font-size:18px;font-weight:600;color:var(--gray-900);min-width:24px;text-align:center}
+.diff-grid{display:flex;flex-direction:column;gap:6px}
+.diff-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:var(--radius);background:var(--gray-50);cursor:pointer;transition:all .12s;text-align:left}
+.diff-btn:hover{border-color:var(--gray-300);background:var(--gray-100)}
+.diff-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.diff-name{font-size:13px;font-weight:500;color:var(--gray-700)}
+.diff-sub{font-size:11px;color:var(--gray-500)}
+.diff-btn.active-easy{border-color:var(--green-main);background:var(--green-pale)}
+.diff-btn.active-easy .diff-name{color:var(--green-dark)}
+.diff-btn.active-medium{border-color:#854F0B;background:var(--amber-pale)}
+.diff-btn.active-medium .diff-name{color:var(--amber-dark)}
+.diff-btn.active-hard{border-color:var(--coral-main);background:var(--coral-pale)}
+.diff-btn.active-hard .diff-name{color:var(--coral-dark)}
+.dot-easy{background:var(--green-main)}
+.dot-medium{background:#854F0B}
+.dot-hard{background:var(--coral-main)}
+.btn-generate{width:100%;padding:13px;background:var(--blue-main);border:none;border-radius:var(--radius);font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-generate:hover{background:var(--blue-dark)}
+.result-placeholder{background:var(--white);border:1.5px dashed #cbd5e1;border-radius:var(--radius-lg);padding:4rem 2rem;text-align:center;color:var(--gray-500);font-size:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.result-placeholder .ico-big{font-size:40px;opacity:.3}
+.result-card{background:var(--white);border:1px solid #e2e8f0;border-radius:var(--radius-lg);overflow:hidden;display:none}
+.sujet-header{background:var(--blue-main);padding:1.5rem 1.75rem;color:#fff}
+.sujet-etab{font-size:11px;color:var(--blue-light);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.sujet-titre{font-size:17px;font-weight:600;color:#fff;margin-bottom:2px}
+.sujet-notions{font-size:12px;color:var(--blue-light);line-height:1.5}
+.sujet-meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.15);font-size:12px;color:var(--blue-light)}
+.badge-diff{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-easy{background:var(--green-pale);color:var(--green-dark)}
+.badge-medium{background:var(--amber-pale);color:var(--amber-dark)}
+.badge-hard{background:var(--coral-pale);color:var(--coral-dark)}
+.sujet-identite{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;padding:1rem 1.75rem;border-bottom:1px solid #e2e8f0}
+.id-label{font-size:11px;color:var(--gray-500)}
+.id-line{border-bottom:1.5px solid var(--gray-300);padding-bottom:2px;margin-top:18px}
+.sujet-body{padding:.5rem 1.75rem 1.75rem}
+.exercise-item{padding:1.125rem 0;border-bottom:1px solid #f1f5f9}
+.exercise-item:last-child{border-bottom:none}
+.ex-num{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--blue-main);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.ex-num::before{content:'';display:inline-block;width:3px;height:14px;background:var(--blue-main);border-radius:2px}
+.ex-enonce{font-size:14px;color:var(--gray-900);line-height:1.75}
+.ex-espace{margin-top:12px;border:1px dashed #cbd5e1;border-radius:var(--radius);min-height:70px;background:#f8fafc}
+.sujet-actions{display:flex;gap:8px;padding:1rem 1.75rem;border-top:1px solid #e2e8f0;background:var(--gray-50)}
+.btn-action{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;border:1px solid}
+.btn-print{background:var(--green-pale);border-color:var(--green-light);color:var(--green-dark)}
+.btn-print:hover{background:var(--green-light)}
+.btn-regen{background:var(--gray-100);border-color:#e2e8f0;color:var(--gray-700)}
+.btn-regen:hover{background:var(--blue-pale);border-color:var(--blue-light);color:var(--blue-dark)}
+.loading-state{display:none;background:var(--white);border:1px solid #e2e8f0;border-radius:var(--radius-lg);padding:4rem 2rem;text-align:center;flex-direction:column;align-items:center;gap:16px}
+.spinner{width:36px;height:36px;border:3px solid var(--blue-pale);border-top-color:var(--blue-main);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:14px;color:var(--gray-500)}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gray-900);color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:500;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:768px){.page{grid-template-columns:1fr}.sujet-identite{grid-template-columns:1fr 1fr}}
+@media print{.topnav,.panel-left,.sujet-actions,.toast{display:none!important}body{background:#fff}.page{display:block;padding:0}.panel-right{display:block!important}.result-card{display:block!important;border:none}.loading-state,.result-placeholder{display:none!important}.exercise-item{page-break-inside:avoid}}
 </style>
 </head>
 <body>
-
 <nav class="topnav">
   <div class="topnav-logo">
-    <div class="ico">📐</div>
+    <div class="topnav-ico">📐</div>
     Générateur d'exercices
   </div>
   <div class="topnav-sub">Mathématiques — Cycle 4 (4ème &amp; 3ème)</div>
 </nav>
-
 <main class="page">
-
-  <!-- COLONNE GAUCHE -->
   <aside class="panel-left">
-
-    <!-- Progression -->
     <div class="steps-bar">
       <div class="step-dot active" id="dot1"></div>
       <div class="step-dot" id="dot2"></div>
       <div class="step-dot" id="dot3"></div>
       <div class="step-dot" id="dot4"></div>
     </div>
-
-    <!-- Niveau -->
     <div class="card">
-      <div class="card-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Niveau de la classe
-      </div>
+      <div class="card-title">📚 Niveau de la classe</div>
       <div class="level-grid">
         <button class="level-btn" id="lvl4" onclick="setNiveau('4')">
           <div class="ico-lvl">📗</div>
@@ -569,28 +153,17 @@
         </button>
       </div>
     </div>
-
-    <!-- Notions -->
     <div class="card">
-      <div class="card-title" style="justify-content:space-between;display:flex;align-items:center">
-        <span style="display:flex;align-items:center;gap:6px">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          Notions à travailler
-        </span>
-        <button class="btn-link" onclick="selectAll()" id="btn-selall" style="display:none;font-size:11px;">Tout sélectionner</button>
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>✅ Notions à travailler</span>
+        <button class="btn-link" onclick="selectAll()" id="btn-selall" style="display:none">Tout sélectionner</button>
       </div>
       <div id="notions-container">
         <div class="notions-empty">Sélectionnez d'abord un niveau</div>
       </div>
     </div>
-
-    <!-- Paramètres -->
     <div class="card">
-      <div class="card-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 1.4 13.44M4.93 4.93a10 10 0 0 0-1.4 13.44"/></svg>
-        Paramètres du sujet
-      </div>
-
+      <div class="card-title">⚙️ Paramètres du sujet</div>
       <div class="nb-row">
         <div class="nb-label">Nombre d'exercices</div>
         <div class="nb-ctrl">
@@ -599,74 +172,34 @@
           <button class="nb-btn" onclick="changeNb(1)">+</button>
         </div>
       </div>
-
-      <div class="card-title" style="margin-bottom:8px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Niveau de difficulté
-      </div>
+      <div class="card-title" style="margin-bottom:8px">📊 Niveau de difficulté</div>
       <div class="diff-grid">
         <button class="diff-btn" id="d-easy" onclick="setDiff('easy')">
           <div class="diff-dot dot-easy"></div>
-          <div>
-            <div class="diff-name">Remédiation</div>
-            <div class="diff-sub">Notions de base</div>
-          </div>
+          <div><div class="diff-name">Remédiation</div><div class="diff-sub">Notions de base</div></div>
         </button>
         <button class="diff-btn" id="d-medium" onclick="setDiff('medium')">
           <div class="diff-dot dot-medium"></div>
-          <div>
-            <div class="diff-name">Consolidation</div>
-            <div class="diff-sub">Niveau classe</div>
-          </div>
+          <div><div class="diff-name">Consolidation</div><div class="diff-sub">Niveau classe</div></div>
         </button>
         <button class="diff-btn" id="d-hard" onclick="setDiff('hard')">
           <div class="diff-dot dot-hard"></div>
-          <div>
-            <div class="diff-name">Approfondissement</div>
-            <div class="diff-sub">Au-delà du programme</div>
-          </div>
+          <div><div class="diff-name">Approfondissement</div><div class="diff-sub">Au-delà du programme</div></div>
         </button>
       </div>
     </div>
-
-    <!-- Clé API -->
-    <div class="card">
-      <div class="card-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        Clé API Anthropic
-      </div>
-      <div class="api-row">
-        <input type="password" id="api-key" placeholder="sk-ant-api03-..." />
-        <span class="api-toggle" onclick="toggleApiKey()">Afficher</span>
-      </div>
-      <div class="api-hint">
-        Obtenez votre clé sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Elle reste stockée localement dans votre navigateur.
-      </div>
-    </div>
-
-    <button class="btn-generate" id="btn-gen" onclick="generate()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Générer le sujet
-    </button>
-
+    <button class="btn-generate" onclick="generate()">⚡ Générer le sujet</button>
   </aside>
-
-  <!-- COLONNE DROITE -->
   <section class="panel-right">
-
     <div class="result-placeholder" id="placeholder">
       <div class="ico-big">📋</div>
       <div>Le sujet généré apparaîtra ici</div>
-      <div style="font-size:12px;color:#94a3b8;max-width:260px;line-height:1.6">
-        Configurez les paramètres à gauche puis cliquez sur <strong>Générer le sujet</strong>
-      </div>
+      <div style="font-size:12px;color:#94a3b8;max-width:260px;line-height:1.6">Configurez les paramètres à gauche puis cliquez sur <strong>Générer le sujet</strong></div>
     </div>
-
-    <div class="loading-state" id="loading-state" style="display:none;flex-direction:column;">
+    <div class="loading-state" id="loading-state">
       <div class="spinner"></div>
       <div class="loading-txt">Génération des exercices en cours…</div>
     </div>
-
     <div class="result-card" id="result-card">
       <div class="sujet-header">
         <div class="sujet-etab">Collège — Mathématiques</div>
@@ -678,65 +211,136 @@
         </div>
       </div>
       <div class="sujet-identite">
-        <div class="id-field">
-          <div class="id-label">Nom et prénom</div>
-          <div class="id-line"></div>
-        </div>
-        <div class="id-field">
-          <div class="id-label">Classe</div>
-          <div class="id-line"></div>
-        </div>
-        <div class="id-field">
-          <div class="id-label">Note</div>
-          <div class="id-line"></div>
-        </div>
+        <div><div class="id-label">Nom et prénom</div><div class="id-line"></div></div>
+        <div><div class="id-label">Classe</div><div class="id-line"></div></div>
+        <div><div class="id-label">Note</div><div class="id-line"></div></div>
       </div>
       <div class="sujet-body" id="sujet-body"></div>
       <div class="sujet-actions">
-        <button class="btn-action btn-print" onclick="window.print()">
-          🖨️ Imprimer / Télécharger PDF
-        </button>
-        <button class="btn-action btn-regen" onclick="generate()">
-          ↺ Régénérer
-        </button>
+        <button class="btn-action btn-print" onclick="window.print()">🖨️ Imprimer / PDF</button>
+        <button class="btn-action btn-regen" onclick="generate()">↺ Régénérer</button>
       </div>
     </div>
-
   </section>
-
 </main>
-
 <div class="toast" id="toast"></div>
-
 <script>
 const NOTIONS = {
-  "4": [
-    "Fractions et nombres relatifs",
-    "Puissances et notation scientifique",
-    "Calcul littéral et équations du premier degré",
-    "Proportionnalité et fonctions linéaires",
-    "Théorème de Pythagore",
-    "Théorème de Thalès",
-    "Probabilités",
-    "Statistiques et moyennes",
-    "Géométrie plane — aires et périmètres",
-    "Volumes de solides"
-  ],
-  "3": [
-    "Développement et factorisation",
-    "Identités remarquables",
-    "Équations du premier degré",
-    "Systèmes d'équations",
-    "Fonctions linéaires et affines",
-    "Trigonométrie dans le triangle rectangle",
-    "Théorème de Pythagore — applications avancées",
-    "Théorème de Thalès — applications avancées",
-    "Statistiques — médiane et quartiles",
-    "Probabilités — expériences composées",
-    "Arithmétique — PGCD et nombres premiers",
-    "Puissances et racines carrées",
-    "Transformations géométriques"
-  ]
+  "4": ["Fractions et nombres relatifs","Puissances et notation scientifique","Calcul littéral et équations","Proportionnalité et fonctions linéaires","Théorème de Pythagore","Théorème de Thalès","Probabilités","Statistiques et moyennes","Géométrie plane — aires et périmètres","Volumes de solides"],
+  "3": ["Développement et factorisation","Identités remarquables","Équations du premier degré","Systèmes d'équations","Fonctions linéaires et affines","Trigonométrie dans le triangle rectangle","Théorème de Thalès — applications","Statistiques — médiane et quartiles","Probabilités — expériences composées","Arithmétique — PGCD et nombres premiers","Puissances et racines carrées","Transformations géométriques"]
+};
+
+const EX = {
+  "Fractions et nombres relatifs": {
+    easy: ["Calculer : 3/4 + 1/2. Donner le résultat sous forme de fraction irréductible.","Simplifier la fraction 18/24. Justifier en indiquant le PGCD de 18 et 24.","Ranger dans l'ordre croissant : -2/3, 0,6, -0,7, 1/2.","Calculer : 5/6 - 1/3. Donner le résultat sous forme de fraction irréductible.","Calculer : 2/5 × 10/3. Simplifier le résultat.","Donner l'opposé et l'inverse de 4/7.","Calculer : 2 - 3/4. Exprimer le résultat sous forme de fraction."],
+    medium: ["Une cuve contient 3/5 de son volume en eau. On retire 1/4 du volume total. Quelle fraction du volume reste-t-il dans la cuve ?","Calculer : (-2/3)² + 5/6 × (-3/10). Donner le résultat sous forme de fraction irréductible.","Comparer 7/11 et 5/8 sans convertir en décimaux. Justifier la réponse.","Un récipient contient 2 et 3/4 litres. On utilise 5/8 de son contenu. Quelle quantité reste-t-il ?","Calculer : (3/4) ÷ (9/16). Simplifier le résultat."],
+    hard: ["Trouver tous les entiers n tels que 12/n soit un entier naturel. Justifier la démarche.","Montrer que la somme de trois fractions consécutives (n-1)/3, n/3, (n+1)/3 vaut toujours n, quel que soit l'entier n."]
+  },
+  "Puissances et notation scientifique": {
+    easy: ["Calculer : 3⁴, (-2)³, 5⁰ et 2⁻².","Écrire en notation scientifique : 45 000, 0,0032 et 1 700 000.","Calculer : 10³ × 10⁴. Exprimer le résultat en notation scientifique.","Calculer : 2⁵ ÷ 2³. Vérifier en calculant les deux membres séparément.","Calculer : (3²)³. Écrire le résultat en notation scientifique."],
+    medium: ["La distance Terre-Soleil est d'environ 1,496 × 10¹¹ m. La lumière se déplace à 3 × 10⁸ m/s. Calculer le temps, en minutes, que met la lumière pour parcourir cette distance.","Simplifier : (6 × 10⁵ × 4 × 10⁻²) ÷ (8 × 10³). Donner le résultat en notation scientifique.","Un virus mesure 2,5 × 10⁻⁷ m. Combien de virus alignés représentent 1 mm ? Donner le résultat en notation scientifique."],
+    hard: ["Résoudre dans les entiers : 2ˣ × 4^(x-1) = 32. Justifier chaque étape.","Simplifier l'expression (2ⁿ)³ × 4^(n+1) ÷ (8ⁿ × 2^(n+2)) et montrer qu'elle ne dépend pas de n."]
+  },
+  "Calcul littéral et équations": {
+    easy: ["Développer et réduire : 3(2x - 5) + 4(x + 1).","Résoudre l'équation : 2x + 7 = 15. Vérifier la solution.","Développer : (x + 4)(x - 2). Identifier chaque terme du résultat.","Résoudre : 3x - 4 = 2x + 6. Vérifier la solution.","Factoriser : 6x + 9. Justifier en identifiant le facteur commun.","Calculer l'expression 3a² - 2a + 5 pour a = -1 et pour a = 2."],
+    medium: ["Le périmètre d'un rectangle est 36 cm. La longueur est le double de la largeur. Mettre en équation et calculer les dimensions du rectangle.","Résoudre : (x + 3)/2 - (2x - 1)/3 = 1. Vérifier la solution.","Deux nombres entiers consécutifs ont un produit de 182. Mettre en équation et trouver ces deux nombres.","Développer et réduire : (2x - 3)² - (x + 1)(x - 1)."],
+    hard: ["Démontrer que (n+1)² - n² = 2n + 1 pour tout entier n, puis en déduire que la différence de deux carrés consécutifs est toujours impaire."]
+  },
+  "Proportionnalité et fonctions linéaires": {
+    easy: ["Un automobiliste roule à vitesse constante. Il parcourt 150 km en 2 heures. Quelle distance parcourt-il en 5 heures ?","Une recette pour 4 personnes nécessite 300 g de farine. Quelle quantité faut-il pour 10 personnes ?","Un robinet remplit un réservoir de 120 litres en 4 heures. Combien de temps met-il pour remplir 90 litres ?"],
+    medium: ["La fonction f est linéaire et vérifie f(3) = 12. Déterminer le coefficient de proportionnalité, calculer f(7) et trouver l'antécédent de 20.","Un commerçant vend des articles à un prix fixe. La recette R (en euros) est proportionnelle au nombre n d'articles vendus : R = 4,5n. Calculer le nombre d'articles à vendre pour une recette de 270 euros.","Deux grandeurs x et y sont proportionnelles. On sait que y = 8 quand x = 5. Exprimer y en fonction de x, puis calculer x quand y = 20."],
+    hard: ["Un cycliste roule à 18 km/h et un piéton marche à 6 km/h. Ils partent du même point dans le même sens. Exprimer leurs distances en fonction du temps, puis déterminer au bout de combien de minutes le cycliste a 2 km d'avance."]
+  },
+  "Théorème de Pythagore": {
+    easy: ["Un triangle ABC rectangle en B a AB = 6 cm et BC = 8 cm. Calculer AC. Citer le théorème utilisé.","Vérifier que le triangle de côtés 5 cm, 12 cm et 13 cm est rectangle. Préciser en quel sommet se trouve l'angle droit.","Une échelle de 5 m est appuyée contre un mur. Le pied de l'échelle est à 2 m du mur. À quelle hauteur l'échelle touche-t-elle le mur ? Arrondir au centimètre.","Un triangle DEF rectangle en D a DF = 9 cm et EF = 15 cm. Calculer DE. Arrondir au dixième."],
+    medium: ["Un terrain de football rectangulaire mesure 90 m de long et 60 m de large. Calculer la longueur de la diagonale au mètre près.","Dans un repère orthogonal, A(1 ; 2) et B(4 ; 6) sont donnés. Calculer la distance AB en appliquant le théorème de Pythagore.","Un triangle ABC a AB = 10 cm, AC = 8 cm et l'angle BAC = 90°. D est le milieu de BC. Calculer AD."],
+    hard: ["Dans un losange de côté a et de grande diagonale d1, exprimer la petite diagonale d2 en fonction de a et d1. Appliquer avec a = 13 cm et d1 = 24 cm."]
+  },
+  "Théorème de Thalès": {
+    easy: ["Dans un triangle ABC, D est sur [AB] et E sur [AC] avec DE // BC. AD = 4 cm, AB = 10 cm, DE = 3 cm. Calculer BC.","Un arbre projette une ombre de 8 m. Au même moment, un poteau de 2 m projette une ombre de 3,2 m. Calculer la hauteur de l'arbre.","Dans le triangle PQR, S est sur [PQ] et T sur [PR] avec ST // QR. PS = 6, PQ = 9, PT = 4. Calculer PR."],
+    medium: ["Les droites (AB) et (CD) sont parallèles. Les droites (AC) et (BD) se coupent en O. OA = 3 cm, OC = 5 cm, AB = 6 cm. Calculer OB, OD et CD.","Un arpenteur utilise le théorème de Thalès pour mesurer une largeur de rivière. Les mesures relevées donnent : AC = 80 m, A'C = 32 m, A'B' = 40 m. Calculer la largeur AB."],
+    hard: ["Deux droites sécantes en O sont coupées par deux parallèles. Démontrer que les rapports des segments correspondants sont égaux. Illustrer avec un exemple numérique précis."]
+  },
+  "Probabilités": {
+    easy: ["On lance un dé à 6 faces équilibrées. Calculer la probabilité d'obtenir : a) un nombre pair, b) un nombre supérieur à 4, c) le chiffre 3.","Un sac contient 4 billes rouges, 3 billes bleues et 2 billes vertes. On tire une bille au hasard. Quelle est la probabilité de tirer une bille bleue ?","Une roue de loterie comporte 10 cases numérotées de 1 à 10. Calculer la probabilité de tomber sur un multiple de 3."],
+    medium: ["Dans une classe de 28 élèves, 16 pratiquent un sport et 12 font de la musique. 5 élèves font les deux activités. Un élève est choisi au hasard. Quelle est la probabilité qu'il pratique au moins une de ces deux activités ?","On tire une carte dans un jeu de 32 cartes. Calculer la probabilité d'obtenir un roi ou un cœur. (Il y a 4 rois et 8 cœurs dont 1 roi de cœur.)"],
+    hard: ["On lance deux dés à 6 faces. Construire le tableau des 36 issues. Calculer la probabilité que la somme soit supérieure ou égale à 9, puis la probabilité que la somme soit un nombre premier."]
+  },
+  "Statistiques et moyennes": {
+    easy: ["Les notes de 6 élèves sont : 8, 12, 15, 9, 11, 13. Calculer la moyenne de ces notes.","Les températures relevées pendant une semaine sont : 14, 17, 15, 19, 16, 14, 18 °C. Calculer la moyenne, le minimum et le maximum."],
+    medium: ["Le tableau donne les notes d'une classe :\nNote : 5 | 8 | 10 | 12 | 15 | 18\nEffectif : 2 | 4 | 7 | 6 | 5 | 1\nCalculer la moyenne et identifier le mode.","La taille (en cm) de 7 élèves est : 158, 162, 165, 167, 170, 172, 180. Calculer la médiane et la moyenne. Comparer ces deux indicateurs et expliquer lequel est le plus représentatif."],
+    hard: ["Un groupe de 20 élèves a une moyenne de 12. Un second groupe de 15 élèves a une moyenne de 14. Calculer la moyenne de l'ensemble des 35 élèves. Expliquer pourquoi la réponse n'est pas 13."]
+  },
+  "Développement et factorisation": {
+    easy: ["Développer et réduire : (x + 5)(x - 3).","Factoriser : 4x² - 12x. Vérifier en développant.","Développer et réduire : (2x - 1)(3x + 4).","Factoriser entièrement : 6x² + 9x.","Développer et réduire : 3x(2x - 5) - x(x + 2)."],
+    medium: ["Développer puis réduire : (3x - 2)(3x + 2) - (x - 5)².","Factoriser en utilisant un facteur commun : x(x + 3) - 2(x + 3).","Un carré de côté a cm est agrandi de 3 cm de chaque côté. Exprimer l'augmentation d'aire en fonction de a et interpréter chaque terme.","Montrer que (n+1)² - (n-1)² = 4n pour tout entier n."],
+    hard: ["Résoudre : (2x - 3)² - (x + 1)² = 0 en factorisant l'expression. Vérifier les deux solutions."]
+  },
+  "Identités remarquables": {
+    easy: ["Développer en utilisant une identité remarquable : (x + 5)².","Développer : (x - 4)². Vérifier en développant sans identité remarquable.","Développer : (x + 3)(x - 3)."],
+    medium: ["Factoriser : x² - 16. Puis résoudre x² - 16 = 0.","Factoriser : 4x² - 12x + 9. Identifier l'identité remarquable utilisée.","Calculer 99² en utilisant l'identité (a - b)² = a² - 2ab + b². Détailler le calcul."],
+    hard: ["Factoriser complètement : x⁴ - 1. (Indication : considérer x⁴ - 1 comme une différence de carrés, puis factoriser à nouveau.)"]
+  },
+  "Équations du premier degré": {
+    easy: ["Résoudre : 3x + 8 = 23. Vérifier la solution.","Résoudre : 5x - 3 = 2x + 9. Vérifier la solution.","Résoudre : x/4 + 3 = 7. Vérifier la solution.","Un nombre augmenté de 15 est égal à 47. Trouver ce nombre en posant une équation."],
+    medium: ["Résoudre : (2x - 1)/3 + (x + 4)/6 = 2. Vérifier la solution.","Un père a 3 fois l'âge de son fils. Dans 12 ans, il aura deux fois l'âge de son fils. Mettre en équation et trouver les âges actuels.","Résoudre : 2(3x - 4) - (x + 5) = 3(x - 2) + 1."],
+    hard: ["Résoudre : 3/(x - 2) = 5/(x + 1), avec x différent de 2 et de -1. Vérifier la solution obtenue."]
+  },
+  "Systèmes d'équations": {
+    easy: ["Résoudre par substitution : y = 2x + 1 et x + y = 7. Vérifier la solution.","Résoudre par addition : x + y = 10 et x - y = 4.","Deux nombres ont une somme de 30 et une différence de 8. Trouver ces deux nombres en posant un système d'équations."],
+    medium: ["Résoudre le système : 3x + 2y = 16 et 5x - y = 9. Vérifier la solution.","Un billet de théâtre coûte 15 euros pour les adultes et 8 euros pour les enfants. 40 billets ont été vendus pour une recette de 452 euros. Combien d'adultes et d'enfants ont assisté au spectacle ?"],
+    hard: ["Résoudre le système : (x + 1)/2 - (y - 1)/3 = 1 et 2x/3 + (y + 2)/4 = 3. Détailler chaque étape."]
+  },
+  "Fonctions linéaires et affines": {
+    easy: ["La fonction f est affine et vérifie f(0) = 3 et f(2) = 7. Déterminer l'expression de f(x).","Donner le coefficient directeur et l'ordonnée à l'origine de h(x) = -3x + 5.","Calculer les images de x = -2, x = 0 et x = 3 par la fonction g(x) = 2x - 1."],
+    medium: ["Deux fonctions affines sont f(x) = 2x + 1 et g(x) = -x + 7. Déterminer les coordonnées du point d'intersection de leurs représentations graphiques.","Un chauffagiste facture 40 euros de déplacement plus 35 euros par heure de travail. Modéliser le coût total C en fonction du nombre d'heures h, puis calculer le coût pour une intervention de 3h30."],
+    hard: ["Déterminer la fonction affine dont la représentation passe par A(-2 ; 5) et B(3 ; -10). En déduire le zéro de cette fonction (valeur de x pour laquelle f(x) = 0)."]
+  },
+  "Trigonométrie dans le triangle rectangle": {
+    easy: ["Dans un triangle ABC rectangle en B, l'angle BAC mesure 35° et AB = 8 cm. Calculer BC. Arrondir au millimètre.","Dans un triangle PQR rectangle en Q, PQ = 6 cm et QR = 4 cm. Calculer l'angle QPR en degrés. Arrondir au dixième.","Dans un triangle DEF rectangle en D, l'angle DEF = 48° et EF = 12 cm. Calculer DE. Arrondir au millimètre."],
+    medium: ["Un mât de 10 m est maintenu par un câble qui part du sommet et est fixé au sol à 6 m de la base. Calculer l'angle que fait le câble avec le sol. Arrondir au dixième de degré.","Un avion vole à une altitude de 3 000 m. Depuis le sol, on observe l'avion avec un angle d'élévation de 25°. Calculer la distance horizontale entre l'observateur et la verticale de l'avion."],
+    hard: ["Dans un triangle ABC, AB = 10 cm, l'angle BAC = 40° et l'angle ABC = 65°. En traçant la hauteur issue de B, calculer BC et AC. Arrondir au millimètre."]
+  },
+  "Théorème de Thalès — applications": {
+    easy: ["Dans un triangle ABC, D est sur [AB] et E sur [AC] avec DE // BC. AD = 3 cm, AB = 9 cm, AE = 4 cm. Calculer AC et DE sachant que BC = 7,5 cm.","Un réverbère de 6 m de hauteur projette l'ombre d'un enfant de 1,20 m. L'ombre mesure 2 m. Calculer la distance entre l'enfant et le pied du réverbère."],
+    medium: ["Deux droites sécantes en O sont coupées par deux droites parallèles. On mesure OA = 4 cm, OA' = 6 cm et AB = 5 cm. Calculer A'B'.","On souhaite mesurer la largeur d'une rivière. On dispose les points : C sur une rive, A et B sur l'autre rive. On sait que CA = 12 m, et en utilisant un point auxiliaire, on obtient les mesures permettant d'appliquer le théorème de Thalès. Décrire la méthode et effectuer le calcul si CA'/C'A = 2/3 et CA = 12 m."],
+    hard: ["Démontrer la réciproque du théorème de Thalès et l'utiliser pour montrer que deux droites sont parallèles dans une figure donnée avec les mesures : AD/AB = 3/5 et AE/AC = 3/5."]
+  },
+  "Statistiques — médiane et quartiles": {
+    easy: ["Voici les notes d'un élève : 8, 11, 14, 9, 13, 7, 15, 10, 12. Les ranger dans l'ordre croissant et calculer la médiane.","Calculer la médiane des données suivantes : 4, 7, 9, 11, 15, 18, 20."],
+    medium: ["Les salaires (en milliers d'euros) de 10 employés sont : 22, 24, 25, 27, 28, 30, 31, 35, 38, 55. Calculer la médiane, les quartiles Q1 et Q3, et l'écart interquartile. Identifier une éventuelle valeur atypique.","Décrire comment construire une boîte à moustaches (box-plot) à partir des données : min = 5, Q1 = 9, médiane = 13, Q3 = 17, max = 22. Interpréter chaque élément."],
+    hard: ["Deux classes ont la même médiane et la même moyenne à un contrôle, mais des écarts interquartiles respectifs de 4 et de 9. Quel indicateur choisir pour comparer la dispersion ? Justifier précisément votre choix."]
+  },
+  "Probabilités — expériences composées": {
+    easy: ["On lance une pièce de monnaie deux fois. Lister toutes les issues possibles et calculer la probabilité d'obtenir deux fois pile.","Un sac contient 3 boules rouges et 2 boules bleues. On tire deux boules successivement sans remise. Lister les issues et calculer la probabilité d'obtenir deux boules de la même couleur."],
+    medium: ["On tire une carte dans un jeu de 32 cartes, on la remet, puis on tire une nouvelle carte. Calculer la probabilité d'obtenir deux cœurs. Comparer avec le cas sans remise.","Deux équipes A et B jouent. La probabilité que A gagne est 0,6. Les matchs sont indépendants. Calculer la probabilité que A gagne les deux premiers matchs d'une série."],
+    hard: ["Un lot contient 8 pièces dont 3 défectueuses. On tire successivement 2 pièces sans remise. Construire l'arbre complet et calculer la probabilité qu'au moins une pièce soit défectueuse."]
+  },
+  "Arithmétique — PGCD et nombres premiers": {
+    easy: ["Déterminer si 97 est un nombre premier. Justifier en indiquant quels diviseurs il faut tester et pourquoi.","Calculer le PGCD de 36 et 48 par la méthode des diviseurs communs.","Lister les multiples de 4 et de 6 inférieurs à 40, et en déduire leur PPCM."],
+    medium: ["Calculer le PGCD de 252 et 180 par l'algorithme d'Euclide. En déduire le PPCM de 252 et 180.","Une boulangerie reçoit 120 pains et 84 croissants. On veut former des plateaux identiques, sans reste. Quel est le nombre maximum de plateaux ? Combien de pains et de croissants par plateau ?"],
+    hard: ["Démontrer que pour tout entier n, l'expression n² + n est toujours un entier pair. En déduire que n² + n + 1 est toujours impair."]
+  },
+  "Puissances et racines carrées": {
+    easy: ["Calculer sans calculatrice : racine carrée de 49, de 144 et de 0,25.","Encadrer la racine carrée de 30 entre deux entiers consécutifs. Justifier.","Simplifier : racine carrée de 75. (Indication : 75 = 25 × 3.)"],
+    medium: ["Calculer et simplifier : racine de 50 + racine de 32 - racine de 18.","Résoudre l'équation x² = 45. Donner les solutions sous forme de racines simplifiées."],
+    hard: ["Rationaliser le dénominateur de 5 / (racine de 3 - 1) et simplifier le résultat. Justifier la méthode utilisée."]
+  },
+  "Volumes de solides": {
+    easy: ["Calculer le volume d'un cube d'arête 5 cm.","Calculer le volume d'un cylindre de rayon 4 cm et de hauteur 10 cm. Arrondir au cm³.","Un pavé droit mesure 8 cm × 5 cm × 3 cm. Calculer son volume et l'aire de sa surface totale."],
+    medium: ["Un cône a un rayon de base de 6 cm et une hauteur de 9 cm. Calculer son volume, puis comparer avec le volume du cylindre de même base et même hauteur.","Une boîte cylindrique de rayon 5 cm et de hauteur 12 cm doit être remplie de sable. Combien de kilos faut-il si 1 dm³ de sable pèse 1,5 kg ?"],
+    hard: ["Une sphère est inscrite dans un cube d'arête a. Exprimer le rapport du volume de la sphère au volume du cube, puis calculer sa valeur numérique arrondie au millième."]
+  },
+  "Géométrie plane — aires et périmètres": {
+    easy: ["Calculer l'aire et le périmètre d'un rectangle de longueur 12 cm et de largeur 7 cm.","Calculer l'aire d'un triangle de base 10 cm et de hauteur 6 cm.","Calculer l'aire et le périmètre d'un disque de rayon 5 cm. Arrondir au centième."],
+    medium: ["Une pièce rectangulaire de 8 m sur 6 m contient une fenêtre circulaire de diamètre 1,5 m. Calculer la superficie de mur à peindre (hors fenêtre). Arrondir au centième.","Un trapèze a pour bases 6 cm et 10 cm, et une hauteur de 4 cm. Calculer son aire."],
+    hard: ["Un hexagone régulier est inscrit dans un cercle de rayon r. Montrer que son aire vaut (3 × racine de 3 / 2) × r². Appliquer avec r = 6 cm. Arrondir au centième."]
+  },
+  "Transformations géométriques": {
+    easy: ["Construire l'image du triangle A(0;1), B(2;1), C(1;3) par la translation de vecteur (3 ; -2).","Tracer le symétrique du point A(1 ; 4) par rapport à la droite d'équation x = 3.","Construire l'image du point A(3 ; 2) par la rotation d'angle 90° dans le sens direct et de centre O."],
+    medium: ["La figure F contient les points A(0 ; 0), B(4 ; 0), C(4 ; 3). Déterminer les images de ces points par la symétrie centrale de centre I(2 ; 1).","Un rectangle ABCD de sommets A(1;1), B(3;1), C(3;2), D(1;2) est soumis à une homothétie de centre O et de rapport 2. Calculer les coordonnées des images et comparer les aires."],
+    hard: ["Démontrer que la composition de deux symétries axiales par rapport à deux droites parallèles séparées d'une distance d est une translation de vecteur perpendiculaire aux droites et de norme 2d."]
+  }
 };
 
 let niveau = null, diff = null, nbex = 5, notions = new Set();
@@ -749,11 +353,11 @@ function toast(msg) {
 }
 
 function updateDots() {
-  const states = [niveau !== null, notions.size > 0, diff !== null, false];
+  const s = [niveau !== null, notions.size > 0, diff !== null, false];
   for (let i = 0; i < 4; i++) {
     const d = document.getElementById('dot' + (i + 1));
-    if (states[i]) d.className = 'step-dot done';
-    else if (states.slice(0, i).every(Boolean)) d.className = 'step-dot active';
+    if (s[i]) d.className = 'step-dot done';
+    else if (s.slice(0, i).every(Boolean)) d.className = 'step-dot active';
     else d.className = 'step-dot';
   }
 }
@@ -764,13 +368,11 @@ function setNiveau(n) {
   document.getElementById('lvl4').className = 'level-btn' + (n === '4' ? ' active' : '');
   document.getElementById('lvl3').className = 'level-btn' + (n === '3' ? ' active' : '');
   document.getElementById('btn-selall').style.display = 'inline';
-
   const c = document.getElementById('notions-container');
   c.innerHTML = '<div class="notions-list">' +
     NOTIONS[n].map(no =>
-      `<div class="notion-chip" onclick="toggleNotion(this,'${no.replace(/'/g,"\\'")}')"><div class="chk"></div><span>${no}</span></div>`
-    ).join('') +
-    '</div>';
+      '<div class="notion-chip" onclick="toggleNotion(this,\'' + no.replace(/'/g, "\\'") + '\')"><div class="chk"></div><span>' + no + '</span></div>'
+    ).join('') + '</div>';
   updateDots();
 }
 
@@ -805,108 +407,57 @@ function setDiff(d) {
   updateDots();
 }
 
-function toggleApiKey() {
-  const inp = document.getElementById('api-key');
-  const btn = inp.nextElementSibling;
-  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Masquer'; }
-  else { inp.type = 'password'; btn.textContent = 'Afficher'; }
+function pickRandom(arr, n) {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
 }
 
-function saveApiKey() {
-  const k = document.getElementById('api-key').value.trim();
-  if (k) localStorage.setItem('anthropic_key', k);
-  return k;
-}
-
-window.addEventListener('load', () => {
-  const saved = localStorage.getItem('anthropic_key');
-  if (saved) document.getElementById('api-key').value = saved;
-});
-
-async function generate() {
+function generate() {
   if (!niveau) { toast('Veuillez sélectionner un niveau.'); return; }
   if (notions.size === 0) { toast('Veuillez sélectionner au moins une notion.'); return; }
   if (!diff) { toast('Veuillez sélectionner un niveau de difficulté.'); return; }
-
-  const apiKey = saveApiKey();
-  if (!apiKey || !apiKey.startsWith('sk-ant')) {
-    toast('Veuillez entrer une clé API Anthropic valide (sk-ant-…)');
-    return;
-  }
-
-  const diffLabels = {
-    easy: 'Remédiation — notions de base, exercices guidés et progressifs',
-    medium: 'Consolidation — niveau attendu en classe, autonomie requise',
-    hard: 'Approfondissement — exercices complexes, au-delà du programme standard'
-  };
-  const diffBadge = { easy: 'Remédiation', medium: 'Consolidation', hard: 'Approfondissement' };
-  const badgeClass = { easy: 'badge-easy', medium: 'badge-medium', hard: 'badge-hard' };
-  const notionsList = [...notions].join(', ');
-  const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 
   document.getElementById('placeholder').style.display = 'none';
   document.getElementById('result-card').style.display = 'none';
   document.getElementById('loading-state').style.display = 'flex';
 
-  const prompt = `Tu es un professeur de mathématiques expérimenté en classes de ${niveau}ème au collège en France. Tu travailles selon le programme officiel de l'Éducation nationale, cycle 4.
+  setTimeout(() => {
+    const diffLabels = { easy: 'Remédiation', medium: 'Consolidation', hard: 'Approfondissement' };
+    const badgeClass = { easy: 'badge-easy', medium: 'badge-medium', hard: 'badge-hard' };
+    const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+    const notionsList = [...notions];
 
-Génère exactement ${nbex} exercice(s) de mathématiques sur les notions suivantes : ${notionsList}.
-Niveau de difficulté : ${diffLabels[diff]}.
-
-RÈGLES IMPÉRATIVES :
-- Rédige des énoncés clairs, précis et complets, avec des valeurs numériques concrètes
-- Utilise un registre académique sobre, conforme aux sujets officiels du collège
-- Numérotation stricte : chaque exercice commence par "Exercice N :" (N = numéro)
-- Aucun corrigé, uniquement les énoncés
-- Aucun emoji, aucun symbole markdown (pas d'astérisques, tirets de liste, etc.)
-- Une ligne vide entre chaque exercice
-- Les exercices doivent être variés, ni trop similaires entre eux
-
-Commence directement par "Exercice 1 :" sans introduction.`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-opus-4-6',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+    let pool = [];
+    notionsList.forEach(notion => {
+      const bank = EX[notion];
+      if (bank && bank[diff]) bank[diff].forEach(ex => pool.push({ notion, text: ex }));
     });
 
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.error?.message || 'Erreur API ' + resp.status);
+    if (pool.length < nbex) {
+      notionsList.forEach(notion => {
+        const bank = EX[notion];
+        if (bank) {
+          ['easy','medium','hard'].filter(d => d !== diff).forEach(d => {
+            if (bank[d]) bank[d].forEach(ex => {
+              if (!pool.find(p => p.text === ex)) pool.push({ notion, text: ex });
+            });
+          });
+        }
+      });
     }
 
-    const data = await resp.json();
-    const text = data.content?.map(b => b.text || '').join('') || '';
-
-    const exercises = text.split(/\n(?=Exercice \d+\s*:)/i).filter(e => e.trim());
+    const selected = pickRandom(pool, Math.min(nbex, pool.length));
 
     let bodyHtml = '';
-    exercises.forEach(ex => {
-      const lines = ex.trim().split('\n');
-      const firstLine = lines[0];
-      const rest = lines.slice(1).join('\n').trim();
-      bodyHtml += `
-        <div class="exercise-item">
-          <div class="ex-num">${firstLine}</div>
-          <div class="ex-enonce">${rest.replace(/\n/g, '<br>')}</div>
-          <div class="ex-espace"></div>
-        </div>`;
+    selected.forEach((item, i) => {
+      bodyHtml += '<div class="exercise-item"><div class="ex-num">Exercice ' + (i + 1) + '</div><div class="ex-enonce">' + item.text.replace(/\n/g, '<br>') + '</div><div class="ex-espace"></div></div>';
     });
 
-    document.getElementById('s-titre').textContent = `Classe de ${niveau}ème`;
-    document.getElementById('s-notions').textContent = notionsList;
-    document.getElementById('s-date').textContent = 'Date : ' + today + '  —  ' + nbex + ' exercice(s)';
-    document.getElementById('s-badge').innerHTML = `<span class="badge-diff ${badgeClass[diff]}">${diffBadge[diff]}</span>`;
+    if (!bodyHtml) bodyHtml = '<div style="padding:1rem;color:#6b6b6b;font-size:13px">Aucun exercice disponible pour cette combinaison.</div>';
+
+    document.getElementById('s-titre').textContent = 'Classe de ' + niveau + 'ème';
+    document.getElementById('s-notions').textContent = notionsList.join(' — ');
+    document.getElementById('s-date').textContent = 'Date : ' + today + '   ·   ' + selected.length + ' exercice(s)';
+    document.getElementById('s-badge').innerHTML = '<span class="badge-diff ' + badgeClass[diff] + '">' + diffLabels[diff] + '</span>';
     document.getElementById('sujet-body').innerHTML = bodyHtml;
 
     document.getElementById('loading-state').style.display = 'none';
@@ -914,17 +465,7 @@ Commence directement par "Exercice 1 :" sans introduction.`;
     document.getElementById('dot4').className = 'step-dot done';
     document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
     toast('Sujet généré avec succès !');
-
-  } catch (e) {
-    document.getElementById('loading-state').style.display = 'none';
-    document.getElementById('placeholder').style.display = 'flex';
-    document.getElementById('placeholder').innerHTML = `
-      <div class="ico-big">⚠️</div>
-      <div style="font-weight:600;color:#991b1b">Erreur de génération</div>
-      <div style="font-size:12px;color:#6b7280;max-width:300px;line-height:1.6">${e.message}</div>
-      <div style="font-size:12px;color:#6b7280">Vérifiez votre clé API et réessayez.</div>`;
-    toast('Erreur : ' + e.message);
-  }
+  }, 600);
 }
 </script>
 </body>
