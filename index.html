@@ -1,0 +1,386 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0;max-width:680px;font-family:var(--font-sans)}
+.banner{background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px}
+.banner-icon{width:36px;height:36px;background:#185FA5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.banner-icon i{color:#fff;font-size:18px}
+.banner-text-title{font-size:14px;font-weight:500;color:#0C447C}
+.banner-text-sub{font-size:12px;color:#185FA5;margin-top:1px}
+.steps{display:flex;gap:0;margin-bottom:1.5rem;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-1)}
+.step{flex:1;padding:10px 8px;text-align:center;font-size:11px;color:var(--text-muted);border-right:0.5px solid var(--border);cursor:default;transition:all .2s}
+.step:last-child{border-right:none}
+.step.active{background:#E6F1FB;color:#0C447C;font-weight:500}
+.step.done{background:#EAF3DE;color:#3B6D11}
+.step-num{display:block;font-size:16px;font-weight:500;margin-bottom:2px}
+.step.active .step-num{color:#185FA5}
+.step.done .step-num{color:#3B6D11}
+.section-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem;transition:border-color .2s}
+.section-card.highlighted{border-color:#B5D4F4}
+.section-label{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
+.section-label i{font-size:14px;color:#378ADD}
+.level-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.level-btn{padding:12px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--surface-1);cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.level-btn:hover{border-color:#85B7EB;background:#E6F1FB}
+.level-btn.sel-level{border-color:#185FA5;background:#E6F1FB;border-width:1.5px}
+.level-btn i{font-size:20px;color:var(--text-muted)}
+.level-btn.sel-level i{color:#185FA5}
+.level-btn-title{font-size:14px;font-weight:500;color:var(--text-primary)}
+.level-btn-sub{font-size:11px;color:var(--text-muted)}
+.level-btn.sel-level .level-btn-title{color:#0C447C}
+.notions-wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.notion-chip{display:flex;align-items:center;gap:7px;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:12.5px;color:var(--text-secondary);background:var(--surface-1);transition:all .15s;user-select:none}
+.notion-chip:hover{border-color:#85B7EB;color:var(--text-primary);background:var(--surface-2)}
+.notion-chip.sel-notion{border-color:#185FA5;background:#E6F1FB;color:#0C447C}
+.notion-chip .chk{width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.notion-chip.sel-notion .chk{background:#185FA5;border-color:#185FA5}
+.notion-chip.sel-notion .chk::after{content:'';width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
+.nb-row{display:flex;align-items:center;gap:8px}
+.nb-btn{width:32px;height:32px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--surface-1);font-size:18px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
+.nb-btn:hover{border-color:#85B7EB;color:#185FA5;background:#E6F1FB}
+.nb-val{font-size:20px;font-weight:500;color:var(--text-primary);min-width:28px;text-align:center}
+.nb-label{font-size:13px;color:var(--text-muted)}
+.diff-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.diff-btn{padding:10px 6px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--surface-1);font-size:12px;color:var(--text-secondary);cursor:pointer;text-align:center;transition:all .15s;line-height:1.5}
+.diff-btn:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.diff-btn b{display:block;font-size:13px;font-weight:500;margin-bottom:2px}
+.diff-easy.active{border-color:#0F6E56;background:#E1F5EE;color:#085041}
+.diff-medium.active{border-color:#854F0B;background:#FAEEDA;color:#633806}
+.diff-hard.active{border-color:#993C1D;background:#FAECE7;color:#712B13}
+.diff-easy.active b{color:#085041}
+.diff-medium.active b{color:#633806}
+.diff-hard.active b{color:#712B13}
+.generate-btn{width:100%;padding:12px;background:#185FA5;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:1rem}
+.generate-btn:hover{background:#0C447C}
+.result-header{display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 .75rem}
+.result-label{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px}
+.result-label i{font-size:14px;color:#3B6D11}
+.print-btn{padding:6px 14px;border:0.5px solid #97C459;border-radius:var(--radius);background:#EAF3DE;font-size:12px;color:#3B6D11;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.print-btn:hover{background:#C0DD97;border-color:#639922}
+.print-btn i{font-size:14px}
+.subject-box{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.subject-top{background:#185FA5;padding:1.25rem 1.5rem}
+.subject-top-row{display:flex;justify-content:space-between;align-items:flex-start}
+.subject-classe{font-size:11px;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.subject-titre{font-size:16px;font-weight:500;color:#fff}
+.subject-meta{font-size:11px;color:#85B7EB;text-align:right;line-height:1.8;margin-top:2px}
+.tag-diff{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:500;margin-left:6px}
+.tag-easy-s{background:#EAF3DE;color:#27500A}
+.tag-medium-s{background:#FAEEDA;color:#633806}
+.tag-hard-s{background:#FAECE7;color:#712B13}
+.subject-student{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1rem 1.5rem;border-bottom:0.5px solid var(--border)}
+.sfield{border-bottom:0.5px solid var(--border-strong);padding-bottom:2px}
+.sfield-label{font-size:11px;color:var(--text-muted);margin-bottom:20px}
+.exercises{padding:.5rem 1.5rem 1.25rem}
+.exercise{padding:1rem 0;border-bottom:0.5px solid var(--border)}
+.exercise:last-child{border-bottom:none}
+.ex-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ex-badge{background:#E6F1FB;color:#0C447C;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+.ex-text{font-size:13.5px;color:var(--text-primary);line-height:1.7}
+.ex-work{margin-top:10px;border:0.5px dashed var(--border-strong);border-radius:var(--radius);padding:8px;min-height:56px;background:var(--surface-0)}
+.loading-box{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:2.5rem;color:var(--text-muted);font-size:13px}
+.dots{display:flex;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:#378ADD;animation:bounce .9s infinite}
+.dot:nth-child(2){animation-delay:.15s}
+.dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.empty-notions{font-size:13px;color:var(--text-muted);padding:.75rem 0;text-align:center}
+.select-all-btn{font-size:11px;color:#378ADD;cursor:pointer;margin-left:auto;font-weight:400;text-decoration:underline;background:none;border:none;padding:0}
+</style>
+
+<h2 class="sr-only">Générateur d'exercices de mathématiques personnalisés pour les classes de 4ème et 3ème</h2>
+
+<div class="wrap">
+  <div class="banner">
+    <div class="banner-icon"><i class="ti ti-calculator" aria-hidden="true"></i></div>
+    <div>
+      <div class="banner-text-title">Générateur d'exercices personnalisés</div>
+      <div class="banner-text-sub">Mathématiques cycle 4 — Programme officiel Éducation nationale</div>
+    </div>
+  </div>
+
+  <div class="steps" id="steps">
+    <div class="step active" id="step1"><span class="step-num">1</span>Niveau</div>
+    <div class="step" id="step2"><span class="step-num">2</span>Notions</div>
+    <div class="step" id="step3"><span class="step-num">3</span>Difficulté</div>
+    <div class="step" id="step4"><span class="step-num">4</span>Sujet</div>
+  </div>
+
+  <div class="section-card highlighted">
+    <div class="section-label">
+      <i class="ti ti-school" aria-hidden="true"></i>
+      Niveau de la classe
+    </div>
+    <div class="level-row">
+      <button class="level-btn" onclick="setNiveau('4')" id="lvl4">
+        <i class="ti ti-book" aria-hidden="true"></i>
+        <span class="level-btn-title">4ème</span>
+        <span class="level-btn-sub">Cycle 4 — année 1</span>
+      </button>
+      <button class="level-btn" onclick="setNiveau('3')" id="lvl3">
+        <i class="ti ti-book-2" aria-hidden="true"></i>
+        <span class="level-btn-title">3ème</span>
+        <span class="level-btn-sub">Cycle 4 — Brevet</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="section-card" id="card-notions">
+    <div class="section-label" style="justify-content:space-between">
+      <span style="display:flex;align-items:center;gap:6px">
+        <i class="ti ti-list-check" aria-hidden="true"></i>
+        Notion(s) à travailler
+      </span>
+      <button class="select-all-btn" onclick="selectAll()" id="sel-all-btn" style="display:none">Tout sélectionner</button>
+    </div>
+    <div class="notions-wrap" id="notions-wrap">
+      <div class="empty-notions">Sélectionnez d'abord un niveau</div>
+    </div>
+  </div>
+
+  <div class="section-card" id="card-params">
+    <div class="section-label">
+      <i class="ti ti-adjustments-horizontal" aria-hidden="true"></i>
+      Paramètres du sujet
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
+      <div class="section-label" style="margin-bottom:0"><i class="ti ti-copy" aria-hidden="true" style="color:#378ADD"></i>Nombre d'exercices</div>
+      <div class="nb-row" style="margin-left:auto">
+        <button class="nb-btn" onclick="changeNb(-1)">−</button>
+        <span class="nb-val" id="nb-val">5</span>
+        <button class="nb-btn" onclick="changeNb(1)">+</button>
+        <span class="nb-label">exercice(s)</span>
+      </div>
+    </div>
+    <div class="section-label" style="margin-bottom:.5rem"><i class="ti ti-stairs" aria-hidden="true" style="color:#378ADD"></i>Niveau de difficulté</div>
+    <div class="diff-row">
+      <button class="diff-btn diff-easy" onclick="setDiff('easy')" id="d-easy"><b>Remédiation</b>Notions de base</button>
+      <button class="diff-btn diff-medium" onclick="setDiff('medium')" id="d-medium"><b>Consolidation</b>Niveau classe</button>
+      <button class="diff-btn diff-hard" onclick="setDiff('hard')" id="d-hard"><b>Approfondissement</b>Au-delà du programme</button>
+    </div>
+  </div>
+
+  <button class="generate-btn" onclick="generate()">
+    <i class="ti ti-sparkles" aria-hidden="true"></i>
+    Générer le sujet
+  </button>
+
+  <div id="result-area" style="display:none">
+    <div class="result-header">
+      <div class="result-label"><i class="ti ti-circle-check" aria-hidden="true"></i>Sujet généré</div>
+      <button class="print-btn" onclick="printSubject()" id="print-btn"><i class="ti ti-printer" aria-hidden="true"></i>Imprimer</button>
+    </div>
+    <div class="subject-box" id="subject-box"></div>
+  </div>
+</div>
+
+<script>
+const NOTIONS = {
+  "4": [
+    "Fractions et nombres relatifs",
+    "Puissances et notation scientifique",
+    "Calcul littéral et équations",
+    "Proportionnalité et fonctions linéaires",
+    "Théorème de Pythagore",
+    "Théorème de Thalès",
+    "Probabilités",
+    "Statistiques et moyennes",
+    "Géométrie plane — aires et périmètres",
+    "Volumes de solides"
+  ],
+  "3": [
+    "Développement et factorisation",
+    "Équations du premier degré",
+    "Systèmes d'équations",
+    "Fonctions linéaires et affines",
+    "Trigonométrie dans le triangle rectangle",
+    "Théorème de Pythagore — applications",
+    "Théorème de Thalès — applications",
+    "Statistiques — médiane et quartiles",
+    "Probabilités — expériences composées",
+    "Arithmétique — PGCD et nombres premiers",
+    "Puissances et racines carrées",
+    "Transformations géométriques"
+  ]
+};
+
+let niveau = null, diff = null, nbex = 5, notions = new Set();
+
+function updateSteps() {
+  const s = [niveau != null, notions.size > 0, diff != null, false];
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('step' + (i + 1));
+    const filled = s.slice(0, i).every(Boolean);
+    if (i < 3 && s[i]) el.className = 'step done';
+    else if (filled && !s[i]) el.className = 'step active';
+    else el.className = 'step';
+  }
+}
+
+function setNiveau(n) {
+  niveau = n;
+  notions.clear();
+  document.getElementById('lvl4').className = 'level-btn' + (n === '4' ? ' sel-level' : '');
+  document.getElementById('lvl3').className = 'level-btn' + (n === '3' ? ' sel-level' : '');
+  document.getElementById('card-notions').classList.add('highlighted');
+  document.getElementById('sel-all-btn').style.display = 'inline';
+  const wrap = document.getElementById('notions-wrap');
+  wrap.innerHTML = NOTIONS[n].map(no =>
+    `<div class="notion-chip" onclick="toggleNotion(this,'${no.replace(/'/g, "\\'")}')"><div class="chk"></div>${no}</div>`
+  ).join('');
+  updateSteps();
+}
+
+function toggleNotion(el, n) {
+  el.classList.toggle('sel-notion');
+  if (el.classList.contains('sel-notion')) notions.add(n);
+  else notions.delete(n);
+  updateSteps();
+}
+
+function selectAll() {
+  const chips = document.querySelectorAll('.notion-chip');
+  const allSel = [...chips].every(c => c.classList.contains('sel-notion'));
+  notions.clear();
+  chips.forEach(c => {
+    if (allSel) { c.classList.remove('sel-notion'); }
+    else { c.classList.add('sel-notion'); notions.add(c.textContent.trim()); }
+  });
+  updateSteps();
+}
+
+function changeNb(d) {
+  nbex = Math.max(1, Math.min(10, nbex + d));
+  document.getElementById('nb-val').textContent = nbex;
+}
+
+function setDiff(d) {
+  diff = d;
+  ['easy', 'medium', 'hard'].forEach(x => {
+    document.getElementById('d-' + x).className = 'diff-btn diff-' + x + (x === d ? ' active' : '');
+  });
+  updateSteps();
+}
+
+async function generate() {
+  if (!niveau) { alert('Veuillez sélectionner un niveau.'); return; }
+  if (notions.size === 0) { alert('Veuillez sélectionner au moins une notion.'); return; }
+  if (!diff) { alert('Veuillez sélectionner un niveau de difficulté.'); return; }
+
+  const diffLabels = {
+    easy: 'Remédiation (notions de base)',
+    medium: 'Consolidation (niveau classe)',
+    hard: 'Approfondissement (au-delà du programme)'
+  };
+  const notionsList = [...notions].join(', ');
+  const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  document.getElementById('result-area').style.display = 'block';
+  document.getElementById('print-btn').style.display = 'none';
+  document.getElementById('subject-box').innerHTML = `
+    <div class="subject-top">
+      <div class="subject-classe">Génération en cours…</div>
+      <div class="subject-titre">Préparation du sujet</div>
+    </div>
+    <div class="loading-box">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <span>Génération des exercices en cours…</span>
+    </div>`;
+  document.getElementById('subject-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const prompt = `Tu es un professeur de mathématiques en classe de ${niveau}ème (collège France, programme officiel Éducation nationale cycle 4).
+Génère exactement ${nbex} exercice(s) de mathématiques sur les notions suivantes : ${notionsList}.
+Niveau de difficulté : ${diffLabels[diff]}.
+
+Règles strictes :
+- Pas d'emoji ni de mise en forme markdown (pas d'astérisques, pas de symboles spéciaux)
+- Exercices progressifs, clairs et adaptés au niveau ${niveau}ème
+- Chaque exercice commence par "Exercice 1 :", "Exercice 2 :", etc.
+- Énoncés précis avec des valeurs numériques concrètes
+- Pas de corrigé, uniquement les énoncés
+- Style académique sobre, formulation soignée
+- Une ligne vide entre chaque exercice
+
+Réponds uniquement avec les énoncés des exercices, sans introduction ni conclusion.`;
+
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(b => b.text || '').join('') || '';
+
+    const tagClass = { easy: 'tag-easy-s', medium: 'tag-medium-s', hard: 'tag-hard-s' };
+    const tagLabel = { easy: 'Remédiation', medium: 'Consolidation', hard: 'Approfondissement' };
+
+    const exercises = text.split(/\n(?=Exercice \d)/i).filter(e => e.trim());
+    const exHtml = exercises.map(ex => {
+      const lines = ex.trim().split('\n');
+      const title = lines[0];
+      const body = lines.slice(1).join('<br>').trim();
+      return `<div class="exercise">
+        <div class="ex-header"><div class="ex-badge">${title}</div></div>
+        <div class="ex-text">${body}</div>
+        <div class="ex-work"></div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('subject-box').innerHTML = `
+      <div class="subject-top">
+        <div class="subject-top-row">
+          <div>
+            <div class="subject-classe">Classe de ${niveau}ème — Mathématiques</div>
+            <div class="subject-titre">${[...notions].join(', ')}<span class="tag-diff ${tagClass[diff]}">${tagLabel[diff]}</span></div>
+          </div>
+          <div class="subject-meta">Date : ${today}<br>${nbex} exercice(s)</div>
+        </div>
+      </div>
+      <div class="subject-student">
+        <div class="sfield"><div class="sfield-label">Nom et prénom</div></div>
+        <div class="sfield"><div class="sfield-label">Note</div></div>
+      </div>
+      <div class="exercises">${exHtml || '<div style="color:var(--text-muted);font-size:13px;padding:1rem 0">' + text + '</div>'}</div>`;
+
+    document.getElementById('print-btn').style.display = 'flex';
+    document.getElementById('step4').className = 'step done';
+  } catch (e) {
+    document.getElementById('subject-box').innerHTML = '<div class="loading-box">Une erreur est survenue. Veuillez réessayer.</div>';
+  }
+}
+
+function printSubject() {
+  const content = document.getElementById('subject-box').innerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Sujet de mathématiques</title><style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Georgia,serif;font-size:12pt;color:#1a1a1a;padding:2.2cm 2.8cm;line-height:1.65}
+    .subject-top{background:#185FA5;padding:1rem 1.5rem;color:#fff;border-radius:6px 6px 0 0;margin-bottom:0}
+    .subject-classe{font-size:9pt;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+    .subject-titre{font-size:14pt;font-weight:bold;color:#fff}
+    .subject-top-row{display:flex;justify-content:space-between;align-items:flex-start}
+    .subject-meta{font-size:9pt;color:#B5D4F4;text-align:right;line-height:1.8}
+    .tag-diff{display:inline-block;padding:2px 8px;border:1px solid #aaa;border-radius:8px;font-size:9pt;margin-left:6px;font-family:Arial,sans-serif;font-weight:normal}
+    .tag-easy-s{color:#085041;border-color:#5DCAA5}
+    .tag-medium-s{color:#633806;border-color:#EF9F27}
+    .tag-hard-s{color:#712B13;border-color:#F0997B}
+    .subject-student{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:14px 1.5rem;border-bottom:1px solid #ddd}
+    .sfield{border-bottom:1px solid #999;padding-bottom:2px}
+    .sfield-label{font-size:9pt;color:#888;margin-bottom:24px;font-family:Arial,sans-serif}
+    .exercises{padding:.5rem 1.5rem 1.5rem}
+    .exercise{padding:14px 0;border-bottom:1px solid #eee;page-break-inside:avoid}
+    .exercise:last-child{border-bottom:none}
+    .ex-badge{display:inline-block;background:#E6F1FB;color:#0C447C;font-size:8pt;font-weight:bold;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-family:Arial,sans-serif}
+    .ex-text{font-size:12pt;line-height:1.7}
+    .ex-work{margin-top:10px;border:1px dashed #ccc;padding:8px;min-height:65px}
+  </style></head><body>${content}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 400);
+}
+</script>
