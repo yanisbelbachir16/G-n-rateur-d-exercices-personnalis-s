@@ -1,185 +1,719 @@
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur d'exercices — Mathématiques Collège</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-.wrap{padding:1.5rem 0;max-width:680px;font-family:var(--font-sans)}
-.banner{background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px}
-.banner-icon{width:36px;height:36px;background:#185FA5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.banner-icon i{color:#fff;font-size:18px}
-.banner-text-title{font-size:14px;font-weight:500;color:#0C447C}
-.banner-text-sub{font-size:12px;color:#185FA5;margin-top:1px}
-.steps{display:flex;gap:0;margin-bottom:1.5rem;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-1)}
-.step{flex:1;padding:10px 8px;text-align:center;font-size:11px;color:var(--text-muted);border-right:0.5px solid var(--border);cursor:default;transition:all .2s}
-.step:last-child{border-right:none}
-.step.active{background:#E6F1FB;color:#0C447C;font-weight:500}
-.step.done{background:#EAF3DE;color:#3B6D11}
-.step-num{display:block;font-size:16px;font-weight:500;margin-bottom:2px}
-.step.active .step-num{color:#185FA5}
-.step.done .step-num{color:#3B6D11}
-.section-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem;transition:border-color .2s}
-.section-card.highlighted{border-color:#B5D4F4}
-.section-label{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
-.section-label i{font-size:14px;color:#378ADD}
-.level-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.level-btn{padding:12px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--surface-1);cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px}
-.level-btn:hover{border-color:#85B7EB;background:#E6F1FB}
-.level-btn.sel-level{border-color:#185FA5;background:#E6F1FB;border-width:1.5px}
-.level-btn i{font-size:20px;color:var(--text-muted)}
-.level-btn.sel-level i{color:#185FA5}
-.level-btn-title{font-size:14px;font-weight:500;color:var(--text-primary)}
-.level-btn-sub{font-size:11px;color:var(--text-muted)}
-.level-btn.sel-level .level-btn-title{color:#0C447C}
-.notions-wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.notion-chip{display:flex;align-items:center;gap:7px;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:12.5px;color:var(--text-secondary);background:var(--surface-1);transition:all .15s;user-select:none}
-.notion-chip:hover{border-color:#85B7EB;color:var(--text-primary);background:var(--surface-2)}
-.notion-chip.sel-notion{border-color:#185FA5;background:#E6F1FB;color:#0C447C}
-.notion-chip .chk{width:14px;height:14px;border:1.5px solid var(--border-strong);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.notion-chip.sel-notion .chk{background:#185FA5;border-color:#185FA5}
-.notion-chip.sel-notion .chk::after{content:'';width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
-.nb-row{display:flex;align-items:center;gap:8px}
-.nb-btn{width:32px;height:32px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--surface-1);font-size:18px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
-.nb-btn:hover{border-color:#85B7EB;color:#185FA5;background:#E6F1FB}
-.nb-val{font-size:20px;font-weight:500;color:var(--text-primary);min-width:28px;text-align:center}
-.nb-label{font-size:13px;color:var(--text-muted)}
-.diff-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.diff-btn{padding:10px 6px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--surface-1);font-size:12px;color:var(--text-secondary);cursor:pointer;text-align:center;transition:all .15s;line-height:1.5}
-.diff-btn:hover{border-color:var(--border-strong);background:var(--surface-2)}
-.diff-btn b{display:block;font-size:13px;font-weight:500;margin-bottom:2px}
-.diff-easy.active{border-color:#0F6E56;background:#E1F5EE;color:#085041}
-.diff-medium.active{border-color:#854F0B;background:#FAEEDA;color:#633806}
-.diff-hard.active{border-color:#993C1D;background:#FAECE7;color:#712B13}
-.diff-easy.active b{color:#085041}
-.diff-medium.active b{color:#633806}
-.diff-hard.active b{color:#712B13}
-.generate-btn{width:100%;padding:12px;background:#185FA5;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:1rem}
-.generate-btn:hover{background:#0C447C}
-.result-header{display:flex;align-items:center;justify-content:space-between;margin:1.5rem 0 .75rem}
-.result-label{font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px}
-.result-label i{font-size:14px;color:#3B6D11}
-.print-btn{padding:6px 14px;border:0.5px solid #97C459;border-radius:var(--radius);background:#EAF3DE;font-size:12px;color:#3B6D11;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
-.print-btn:hover{background:#C0DD97;border-color:#639922}
-.print-btn i{font-size:14px}
-.subject-box{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
-.subject-top{background:#185FA5;padding:1.25rem 1.5rem}
-.subject-top-row{display:flex;justify-content:space-between;align-items:flex-start}
-.subject-classe{font-size:11px;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.subject-titre{font-size:16px;font-weight:500;color:#fff}
-.subject-meta{font-size:11px;color:#85B7EB;text-align:right;line-height:1.8;margin-top:2px}
-.tag-diff{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:500;margin-left:6px}
-.tag-easy-s{background:#EAF3DE;color:#27500A}
-.tag-medium-s{background:#FAEEDA;color:#633806}
-.tag-hard-s{background:#FAECE7;color:#712B13}
-.subject-student{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1rem 1.5rem;border-bottom:0.5px solid var(--border)}
-.sfield{border-bottom:0.5px solid var(--border-strong);padding-bottom:2px}
-.sfield-label{font-size:11px;color:var(--text-muted);margin-bottom:20px}
-.exercises{padding:.5rem 1.5rem 1.25rem}
-.exercise{padding:1rem 0;border-bottom:0.5px solid var(--border)}
-.exercise:last-child{border-bottom:none}
-.ex-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.ex-badge{background:#E6F1FB;color:#0C447C;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
-.ex-text{font-size:13.5px;color:var(--text-primary);line-height:1.7}
-.ex-work{margin-top:10px;border:0.5px dashed var(--border-strong);border-radius:var(--radius);padding:8px;min-height:56px;background:var(--surface-0)}
-.loading-box{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:2.5rem;color:var(--text-muted);font-size:13px}
-.dots{display:flex;gap:6px}
-.dot{width:7px;height:7px;border-radius:50%;background:#378ADD;animation:bounce .9s infinite}
-.dot:nth-child(2){animation-delay:.15s}
-.dot:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-.empty-notions{font-size:13px;color:var(--text-muted);padding:.75rem 0;text-align:center}
-.select-all-btn{font-size:11px;color:#378ADD;cursor:pointer;margin-left:auto;font-weight:400;text-decoration:underline;background:none;border:none;padding:0}
+  :root {
+    --blue-dark: #0C447C;
+    --blue-main: #185FA5;
+    --blue-mid: #378ADD;
+    --blue-light: #B5D4F4;
+    --blue-pale: #E6F1FB;
+    --green-dark: #27500A;
+    --green-main: #3B6D11;
+    --green-light: #C0DD97;
+    --green-pale: #EAF3DE;
+    --amber-dark: #633806;
+    --amber-main: #854F0B;
+    --amber-light: #FAC775;
+    --amber-pale: #FAEEDA;
+    --coral-dark: #712B13;
+    --coral-main: #993C1D;
+    --coral-light: #F0997B;
+    --coral-pale: #FAECE7;
+    --gray-900: #1a1a1a;
+    --gray-700: #3d3d3d;
+    --gray-500: #6b6b6b;
+    --gray-300: #c4c4c4;
+    --gray-100: #f4f4f4;
+    --gray-50: #fafafa;
+    --white: #ffffff;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f4f8;
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  /* TOP NAV */
+  .topnav {
+    background: var(--blue-main);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topnav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .topnav-logo .ico {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .topnav-sub {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--blue-light);
+  }
+
+  /* LAYOUT */
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* PANEL GAUCHE */
+  .panel-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title svg { flex-shrink: 0; }
+
+  /* NIVEAU */
+  .level-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .level-btn {
+    border: 1.5px solid #e2e8f0;
+    border-radius: var(--radius);
+    background: var(--gray-50);
+    padding: 12px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .level-btn:hover { border-color: var(--blue-light); background: var(--blue-pale); }
+  .level-btn.active {
+    border-color: var(--blue-main);
+    background: var(--blue-pale);
+    border-width: 2px;
+  }
+  .level-btn .lbl { font-size: 15px; font-weight: 600; color: var(--gray-700); }
+  .level-btn .sub { font-size: 11px; color: var(--gray-500); }
+  .level-btn.active .lbl { color: var(--blue-dark); }
+  .level-btn .ico-lvl { font-size: 22px; margin-bottom: 2px; }
+
+  /* NOTIONS */
+  .notions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .notion-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--gray-700);
+    background: var(--gray-50);
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .notion-chip:hover { border-color: var(--blue-light); background: var(--blue-pale); }
+  .notion-chip.active {
+    border-color: var(--blue-main);
+    background: var(--blue-pale);
+    color: var(--blue-dark);
+    font-weight: 500;
+  }
+  .notion-chip .chk {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.12s;
+    background: var(--white);
+  }
+  .notion-chip.active .chk {
+    background: var(--blue-main);
+    border-color: var(--blue-main);
+  }
+  .notion-chip.active .chk::after {
+    content: '';
+    width: 9px; height: 5px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+  .notions-empty {
+    font-size: 13px;
+    color: var(--gray-500);
+    text-align: center;
+    padding: 1rem 0;
+  }
+  .notions-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+  .btn-link {
+    font-size: 12px;
+    color: var(--blue-mid);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  /* NB + DIFF */
+  .nb-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .nb-label { font-size: 13px; color: var(--gray-700); flex: 1; }
+  .nb-ctrl { display: flex; align-items: center; gap: 8px; }
+  .nb-btn {
+    width: 30px; height: 30px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: var(--gray-50);
+    font-size: 18px;
+    color: var(--gray-700);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.12s;
+    line-height: 1;
+  }
+  .nb-btn:hover { border-color: var(--blue-light); background: var(--blue-pale); color: var(--blue-main); }
+  .nb-val { font-size: 18px; font-weight: 600; color: var(--gray-900); min-width: 24px; text-align: center; }
+
+  .diff-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .diff-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: var(--radius);
+    background: var(--gray-50);
+    cursor: pointer;
+    transition: all 0.12s;
+    text-align: left;
+  }
+  .diff-btn:hover { border-color: var(--gray-300); background: var(--gray-100); }
+  .diff-btn .diff-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .diff-btn .diff-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+  .diff-btn .diff-sub { font-size: 11px; color: var(--gray-500); }
+  .diff-btn.active-easy { border-color: var(--green-main); background: var(--green-pale); }
+  .diff-btn.active-easy .diff-name { color: var(--green-dark); }
+  .diff-btn.active-medium { border-color: var(--amber-main); background: var(--amber-pale); }
+  .diff-btn.active-medium .diff-name { color: var(--amber-dark); }
+  .diff-btn.active-hard { border-color: var(--coral-main); background: var(--coral-pale); }
+  .diff-btn.active-hard .diff-name { color: var(--coral-dark); }
+  .dot-easy { background: var(--green-main); }
+  .dot-medium { background: var(--amber-main); }
+  .dot-hard { background: var(--coral-main); }
+
+  /* CLE API */
+  .api-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .api-row input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--gray-900);
+    background: var(--gray-50);
+    font-family: monospace;
+  }
+  .api-row input:focus { outline: none; border-color: var(--blue-mid); background: var(--white); }
+  .api-toggle { font-size: 11px; color: var(--blue-mid); cursor: pointer; white-space: nowrap; }
+  .api-hint { font-size: 11px; color: var(--gray-500); margin-top: 6px; line-height: 1.5; }
+  .api-hint a { color: var(--blue-mid); }
+
+  /* BTN GENERER */
+  .btn-generate {
+    width: 100%;
+    padding: 13px;
+    background: var(--blue-main);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: 0.01em;
+  }
+  .btn-generate:hover { background: var(--blue-dark); }
+  .btn-generate:disabled { background: var(--gray-300); cursor: not-allowed; }
+
+  /* PANEL DROIT */
+  .panel-right { }
+
+  .result-placeholder {
+    background: var(--white);
+    border: 1.5px dashed #cbd5e1;
+    border-radius: var(--radius-lg);
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .result-placeholder .ico-big { font-size: 40px; opacity: 0.3; }
+
+  .result-card {
+    background: var(--white);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: none;
+  }
+
+  /* EN-TETE SUJET */
+  .sujet-header {
+    background: var(--blue-main);
+    padding: 1.5rem 1.75rem;
+    color: #fff;
+    position: relative;
+  }
+  .sujet-etab { font-size: 11px; color: var(--blue-light); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .sujet-titre { font-size: 17px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .sujet-notions { font-size: 12px; color: var(--blue-light); }
+  .sujet-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 12px;
+    color: var(--blue-light);
+  }
+  .badge-diff {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-easy { background: var(--green-pale); color: var(--green-dark); }
+  .badge-medium { background: var(--amber-pale); color: var(--amber-dark); }
+  .badge-hard { background: var(--coral-pale); color: var(--coral-dark); }
+
+  /* IDENTITE ELEVE */
+  .sujet-identite {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.75rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .id-field { }
+  .id-line { border-bottom: 1.5px solid var(--gray-300); padding-bottom: 2px; margin-top: 18px; }
+  .id-label { font-size: 11px; color: var(--gray-500); }
+
+  /* EXERCICES */
+  .sujet-body { padding: 0.5rem 1.75rem 1.75rem; }
+  .exercise-item {
+    padding: 1.125rem 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .exercise-item:last-child { border-bottom: none; }
+  .ex-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue-main);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .ex-num::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 14px;
+    background: var(--blue-main);
+    border-radius: 2px;
+  }
+  .ex-enonce {
+    font-size: 14px;
+    color: var(--gray-900);
+    line-height: 1.75;
+  }
+  .ex-espace {
+    margin-top: 12px;
+    border: 1px dashed #cbd5e1;
+    border-radius: var(--radius);
+    min-height: 70px;
+    background: #f8fafc;
+  }
+
+  /* ACTIONS SUJET */
+  .sujet-actions {
+    display: flex;
+    gap: 8px;
+    padding: 1rem 1.75rem;
+    border-top: 1px solid #e2e8f0;
+    background: var(--gray-50);
+  }
+  .btn-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    border: 1px solid;
+  }
+  .btn-print {
+    background: var(--green-pale);
+    border-color: var(--green-light);
+    color: var(--green-dark);
+  }
+  .btn-print:hover { background: var(--green-light); }
+  .btn-regen {
+    background: var(--gray-100);
+    border-color: #e2e8f0;
+    color: var(--gray-700);
+  }
+  .btn-regen:hover { background: var(--blue-pale); border-color: var(--blue-light); color: var(--blue-dark); }
+
+  /* LOADING */
+  .loading-state {
+    display: none;
+    background: var(--white);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
+    padding: 4rem 2rem;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--blue-pale);
+    border-top-color: var(--blue-main);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-txt { font-size: 14px; color: var(--gray-500); }
+
+  /* STEPS INDICATOR */
+  .steps-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1rem;
+  }
+  .step-dot {
+    flex: 1; height: 4px;
+    border-radius: 2px;
+    background: #e2e8f0;
+    transition: background 0.3s;
+  }
+  .step-dot.done { background: var(--green-main); }
+  .step-dot.active { background: var(--blue-main); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--gray-900);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: transform 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .page { grid-template-columns: 1fr; }
+    .sujet-identite { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media print {
+    .topnav, .panel-left, .sujet-actions, .toast { display: none !important; }
+    body { background: #fff; }
+    .page { display: block; padding: 0; }
+    .panel-right { display: block !important; }
+    .result-card { display: block !important; border: none; box-shadow: none; }
+    .loading-state { display: none !important; }
+    .result-placeholder { display: none !important; }
+    .exercise-item { page-break-inside: avoid; }
+  }
 </style>
+</head>
+<body>
 
-<h2 class="sr-only">Générateur d'exercices de mathématiques personnalisés pour les classes de 4ème et 3ème</h2>
-
-<div class="wrap">
-  <div class="banner">
-    <div class="banner-icon"><i class="ti ti-calculator" aria-hidden="true"></i></div>
-    <div>
-      <div class="banner-text-title">Générateur d'exercices personnalisés</div>
-      <div class="banner-text-sub">Mathématiques cycle 4 — Programme officiel Éducation nationale</div>
-    </div>
+<nav class="topnav">
+  <div class="topnav-logo">
+    <div class="ico">📐</div>
+    Générateur d'exercices
   </div>
+  <div class="topnav-sub">Mathématiques — Cycle 4 (4ème &amp; 3ème)</div>
+</nav>
 
-  <div class="steps" id="steps">
-    <div class="step active" id="step1"><span class="step-num">1</span>Niveau</div>
-    <div class="step" id="step2"><span class="step-num">2</span>Notions</div>
-    <div class="step" id="step3"><span class="step-num">3</span>Difficulté</div>
-    <div class="step" id="step4"><span class="step-num">4</span>Sujet</div>
-  </div>
+<main class="page">
 
-  <div class="section-card highlighted">
-    <div class="section-label">
-      <i class="ti ti-school" aria-hidden="true"></i>
-      Niveau de la classe
-    </div>
-    <div class="level-row">
-      <button class="level-btn" onclick="setNiveau('4')" id="lvl4">
-        <i class="ti ti-book" aria-hidden="true"></i>
-        <span class="level-btn-title">4ème</span>
-        <span class="level-btn-sub">Cycle 4 — année 1</span>
-      </button>
-      <button class="level-btn" onclick="setNiveau('3')" id="lvl3">
-        <i class="ti ti-book-2" aria-hidden="true"></i>
-        <span class="level-btn-title">3ème</span>
-        <span class="level-btn-sub">Cycle 4 — Brevet</span>
-      </button>
-    </div>
-  </div>
+  <!-- COLONNE GAUCHE -->
+  <aside class="panel-left">
 
-  <div class="section-card" id="card-notions">
-    <div class="section-label" style="justify-content:space-between">
-      <span style="display:flex;align-items:center;gap:6px">
-        <i class="ti ti-list-check" aria-hidden="true"></i>
-        Notion(s) à travailler
-      </span>
-      <button class="select-all-btn" onclick="selectAll()" id="sel-all-btn" style="display:none">Tout sélectionner</button>
+    <!-- Progression -->
+    <div class="steps-bar">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+      <div class="step-dot" id="dot4"></div>
     </div>
-    <div class="notions-wrap" id="notions-wrap">
-      <div class="empty-notions">Sélectionnez d'abord un niveau</div>
-    </div>
-  </div>
 
-  <div class="section-card" id="card-params">
-    <div class="section-label">
-      <i class="ti ti-adjustments-horizontal" aria-hidden="true"></i>
-      Paramètres du sujet
-    </div>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
-      <div class="section-label" style="margin-bottom:0"><i class="ti ti-copy" aria-hidden="true" style="color:#378ADD"></i>Nombre d'exercices</div>
-      <div class="nb-row" style="margin-left:auto">
-        <button class="nb-btn" onclick="changeNb(-1)">−</button>
-        <span class="nb-val" id="nb-val">5</span>
-        <button class="nb-btn" onclick="changeNb(1)">+</button>
-        <span class="nb-label">exercice(s)</span>
+    <!-- Niveau -->
+    <div class="card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Niveau de la classe
+      </div>
+      <div class="level-grid">
+        <button class="level-btn" id="lvl4" onclick="setNiveau('4')">
+          <div class="ico-lvl">📗</div>
+          <div class="lbl">4ème</div>
+          <div class="sub">Cycle 4 — an 1</div>
+        </button>
+        <button class="level-btn" id="lvl3" onclick="setNiveau('3')">
+          <div class="ico-lvl">📘</div>
+          <div class="lbl">3ème</div>
+          <div class="sub">Cycle 4 — Brevet</div>
+        </button>
       </div>
     </div>
-    <div class="section-label" style="margin-bottom:.5rem"><i class="ti ti-stairs" aria-hidden="true" style="color:#378ADD"></i>Niveau de difficulté</div>
-    <div class="diff-row">
-      <button class="diff-btn diff-easy" onclick="setDiff('easy')" id="d-easy"><b>Remédiation</b>Notions de base</button>
-      <button class="diff-btn diff-medium" onclick="setDiff('medium')" id="d-medium"><b>Consolidation</b>Niveau classe</button>
-      <button class="diff-btn diff-hard" onclick="setDiff('hard')" id="d-hard"><b>Approfondissement</b>Au-delà du programme</button>
-    </div>
-  </div>
 
-  <button class="generate-btn" onclick="generate()">
-    <i class="ti ti-sparkles" aria-hidden="true"></i>
-    Générer le sujet
-  </button>
-
-  <div id="result-area" style="display:none">
-    <div class="result-header">
-      <div class="result-label"><i class="ti ti-circle-check" aria-hidden="true"></i>Sujet généré</div>
-      <button class="print-btn" onclick="printSubject()" id="print-btn"><i class="ti ti-printer" aria-hidden="true"></i>Imprimer</button>
+    <!-- Notions -->
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;display:flex;align-items:center">
+        <span style="display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Notions à travailler
+        </span>
+        <button class="btn-link" onclick="selectAll()" id="btn-selall" style="display:none;font-size:11px;">Tout sélectionner</button>
+      </div>
+      <div id="notions-container">
+        <div class="notions-empty">Sélectionnez d'abord un niveau</div>
+      </div>
     </div>
-    <div class="subject-box" id="subject-box"></div>
-  </div>
-</div>
+
+    <!-- Paramètres -->
+    <div class="card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 1.4 13.44M4.93 4.93a10 10 0 0 0-1.4 13.44"/></svg>
+        Paramètres du sujet
+      </div>
+
+      <div class="nb-row">
+        <div class="nb-label">Nombre d'exercices</div>
+        <div class="nb-ctrl">
+          <button class="nb-btn" onclick="changeNb(-1)">−</button>
+          <span class="nb-val" id="nb-val">5</span>
+          <button class="nb-btn" onclick="changeNb(1)">+</button>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-bottom:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Niveau de difficulté
+      </div>
+      <div class="diff-grid">
+        <button class="diff-btn" id="d-easy" onclick="setDiff('easy')">
+          <div class="diff-dot dot-easy"></div>
+          <div>
+            <div class="diff-name">Remédiation</div>
+            <div class="diff-sub">Notions de base</div>
+          </div>
+        </button>
+        <button class="diff-btn" id="d-medium" onclick="setDiff('medium')">
+          <div class="diff-dot dot-medium"></div>
+          <div>
+            <div class="diff-name">Consolidation</div>
+            <div class="diff-sub">Niveau classe</div>
+          </div>
+        </button>
+        <button class="diff-btn" id="d-hard" onclick="setDiff('hard')">
+          <div class="diff-dot dot-hard"></div>
+          <div>
+            <div class="diff-name">Approfondissement</div>
+            <div class="diff-sub">Au-delà du programme</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Clé API -->
+    <div class="card">
+      <div class="card-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        Clé API Anthropic
+      </div>
+      <div class="api-row">
+        <input type="password" id="api-key" placeholder="sk-ant-api03-..." />
+        <span class="api-toggle" onclick="toggleApiKey()">Afficher</span>
+      </div>
+      <div class="api-hint">
+        Obtenez votre clé sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Elle reste stockée localement dans votre navigateur.
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btn-gen" onclick="generate()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Générer le sujet
+    </button>
+
+  </aside>
+
+  <!-- COLONNE DROITE -->
+  <section class="panel-right">
+
+    <div class="result-placeholder" id="placeholder">
+      <div class="ico-big">📋</div>
+      <div>Le sujet généré apparaîtra ici</div>
+      <div style="font-size:12px;color:#94a3b8;max-width:260px;line-height:1.6">
+        Configurez les paramètres à gauche puis cliquez sur <strong>Générer le sujet</strong>
+      </div>
+    </div>
+
+    <div class="loading-state" id="loading-state" style="display:none;flex-direction:column;">
+      <div class="spinner"></div>
+      <div class="loading-txt">Génération des exercices en cours…</div>
+    </div>
+
+    <div class="result-card" id="result-card">
+      <div class="sujet-header">
+        <div class="sujet-etab">Collège — Mathématiques</div>
+        <div class="sujet-titre" id="s-titre"></div>
+        <div class="sujet-notions" id="s-notions"></div>
+        <div class="sujet-meta-row">
+          <span id="s-date"></span>
+          <span id="s-badge"></span>
+        </div>
+      </div>
+      <div class="sujet-identite">
+        <div class="id-field">
+          <div class="id-label">Nom et prénom</div>
+          <div class="id-line"></div>
+        </div>
+        <div class="id-field">
+          <div class="id-label">Classe</div>
+          <div class="id-line"></div>
+        </div>
+        <div class="id-field">
+          <div class="id-label">Note</div>
+          <div class="id-line"></div>
+        </div>
+      </div>
+      <div class="sujet-body" id="sujet-body"></div>
+      <div class="sujet-actions">
+        <button class="btn-action btn-print" onclick="window.print()">
+          🖨️ Imprimer / Télécharger PDF
+        </button>
+        <button class="btn-action btn-regen" onclick="generate()">
+          ↺ Régénérer
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
 
 <script>
 const NOTIONS = {
   "4": [
     "Fractions et nombres relatifs",
     "Puissances et notation scientifique",
-    "Calcul littéral et équations",
+    "Calcul littéral et équations du premier degré",
     "Proportionnalité et fonctions linéaires",
     "Théorème de Pythagore",
     "Théorème de Thalès",
@@ -190,12 +724,13 @@ const NOTIONS = {
   ],
   "3": [
     "Développement et factorisation",
+    "Identités remarquables",
     "Équations du premier degré",
     "Systèmes d'équations",
     "Fonctions linéaires et affines",
     "Trigonométrie dans le triangle rectangle",
-    "Théorème de Pythagore — applications",
-    "Théorème de Thalès — applications",
+    "Théorème de Pythagore — applications avancées",
+    "Théorème de Thalès — applications avancées",
     "Statistiques — médiane et quartiles",
     "Probabilités — expériences composées",
     "Arithmétique — PGCD et nombres premiers",
@@ -206,47 +741,55 @@ const NOTIONS = {
 
 let niveau = null, diff = null, nbex = 5, notions = new Set();
 
-function updateSteps() {
-  const s = [niveau != null, notions.size > 0, diff != null, false];
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function updateDots() {
+  const states = [niveau !== null, notions.size > 0, diff !== null, false];
   for (let i = 0; i < 4; i++) {
-    const el = document.getElementById('step' + (i + 1));
-    const filled = s.slice(0, i).every(Boolean);
-    if (i < 3 && s[i]) el.className = 'step done';
-    else if (filled && !s[i]) el.className = 'step active';
-    else el.className = 'step';
+    const d = document.getElementById('dot' + (i + 1));
+    if (states[i]) d.className = 'step-dot done';
+    else if (states.slice(0, i).every(Boolean)) d.className = 'step-dot active';
+    else d.className = 'step-dot';
   }
 }
 
 function setNiveau(n) {
   niveau = n;
   notions.clear();
-  document.getElementById('lvl4').className = 'level-btn' + (n === '4' ? ' sel-level' : '');
-  document.getElementById('lvl3').className = 'level-btn' + (n === '3' ? ' sel-level' : '');
-  document.getElementById('card-notions').classList.add('highlighted');
-  document.getElementById('sel-all-btn').style.display = 'inline';
-  const wrap = document.getElementById('notions-wrap');
-  wrap.innerHTML = NOTIONS[n].map(no =>
-    `<div class="notion-chip" onclick="toggleNotion(this,'${no.replace(/'/g, "\\'")}')"><div class="chk"></div>${no}</div>`
-  ).join('');
-  updateSteps();
+  document.getElementById('lvl4').className = 'level-btn' + (n === '4' ? ' active' : '');
+  document.getElementById('lvl3').className = 'level-btn' + (n === '3' ? ' active' : '');
+  document.getElementById('btn-selall').style.display = 'inline';
+
+  const c = document.getElementById('notions-container');
+  c.innerHTML = '<div class="notions-list">' +
+    NOTIONS[n].map(no =>
+      `<div class="notion-chip" onclick="toggleNotion(this,'${no.replace(/'/g,"\\'")}')"><div class="chk"></div><span>${no}</span></div>`
+    ).join('') +
+    '</div>';
+  updateDots();
 }
 
 function toggleNotion(el, n) {
-  el.classList.toggle('sel-notion');
-  if (el.classList.contains('sel-notion')) notions.add(n);
+  el.classList.toggle('active');
+  if (el.classList.contains('active')) notions.add(n);
   else notions.delete(n);
-  updateSteps();
+  updateDots();
 }
 
 function selectAll() {
   const chips = document.querySelectorAll('.notion-chip');
-  const allSel = [...chips].every(c => c.classList.contains('sel-notion'));
+  const allSel = [...chips].every(c => c.classList.contains('active'));
   notions.clear();
   chips.forEach(c => {
-    if (allSel) { c.classList.remove('sel-notion'); }
-    else { c.classList.add('sel-notion'); notions.add(c.textContent.trim()); }
+    if (allSel) c.classList.remove('active');
+    else { c.classList.add('active'); notions.add(c.querySelector('span').textContent); }
   });
-  updateSteps();
+  updateDots();
 }
 
 function changeNb(d) {
@@ -256,131 +799,133 @@ function changeNb(d) {
 
 function setDiff(d) {
   diff = d;
-  ['easy', 'medium', 'hard'].forEach(x => {
-    document.getElementById('d-' + x).className = 'diff-btn diff-' + x + (x === d ? ' active' : '');
+  ['easy','medium','hard'].forEach(x => {
+    document.getElementById('d-' + x).className = 'diff-btn' + (x === d ? ' active-' + x : '');
   });
-  updateSteps();
+  updateDots();
 }
 
+function toggleApiKey() {
+  const inp = document.getElementById('api-key');
+  const btn = inp.nextElementSibling;
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Masquer'; }
+  else { inp.type = 'password'; btn.textContent = 'Afficher'; }
+}
+
+function saveApiKey() {
+  const k = document.getElementById('api-key').value.trim();
+  if (k) localStorage.setItem('anthropic_key', k);
+  return k;
+}
+
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('anthropic_key');
+  if (saved) document.getElementById('api-key').value = saved;
+});
+
 async function generate() {
-  if (!niveau) { alert('Veuillez sélectionner un niveau.'); return; }
-  if (notions.size === 0) { alert('Veuillez sélectionner au moins une notion.'); return; }
-  if (!diff) { alert('Veuillez sélectionner un niveau de difficulté.'); return; }
+  if (!niveau) { toast('Veuillez sélectionner un niveau.'); return; }
+  if (notions.size === 0) { toast('Veuillez sélectionner au moins une notion.'); return; }
+  if (!diff) { toast('Veuillez sélectionner un niveau de difficulté.'); return; }
+
+  const apiKey = saveApiKey();
+  if (!apiKey || !apiKey.startsWith('sk-ant')) {
+    toast('Veuillez entrer une clé API Anthropic valide (sk-ant-…)');
+    return;
+  }
 
   const diffLabels = {
-    easy: 'Remédiation (notions de base)',
-    medium: 'Consolidation (niveau classe)',
-    hard: 'Approfondissement (au-delà du programme)'
+    easy: 'Remédiation — notions de base, exercices guidés et progressifs',
+    medium: 'Consolidation — niveau attendu en classe, autonomie requise',
+    hard: 'Approfondissement — exercices complexes, au-delà du programme standard'
   };
+  const diffBadge = { easy: 'Remédiation', medium: 'Consolidation', hard: 'Approfondissement' };
+  const badgeClass = { easy: 'badge-easy', medium: 'badge-medium', hard: 'badge-hard' };
   const notionsList = [...notions].join(', ');
   const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 
-  document.getElementById('result-area').style.display = 'block';
-  document.getElementById('print-btn').style.display = 'none';
-  document.getElementById('subject-box').innerHTML = `
-    <div class="subject-top">
-      <div class="subject-classe">Génération en cours…</div>
-      <div class="subject-titre">Préparation du sujet</div>
-    </div>
-    <div class="loading-box">
-      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-      <span>Génération des exercices en cours…</span>
-    </div>`;
-  document.getElementById('subject-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('loading-state').style.display = 'flex';
 
-  const prompt = `Tu es un professeur de mathématiques en classe de ${niveau}ème (collège France, programme officiel Éducation nationale cycle 4).
+  const prompt = `Tu es un professeur de mathématiques expérimenté en classes de ${niveau}ème au collège en France. Tu travailles selon le programme officiel de l'Éducation nationale, cycle 4.
+
 Génère exactement ${nbex} exercice(s) de mathématiques sur les notions suivantes : ${notionsList}.
 Niveau de difficulté : ${diffLabels[diff]}.
 
-Règles strictes :
-- Pas d'emoji ni de mise en forme markdown (pas d'astérisques, pas de symboles spéciaux)
-- Exercices progressifs, clairs et adaptés au niveau ${niveau}ème
-- Chaque exercice commence par "Exercice 1 :", "Exercice 2 :", etc.
-- Énoncés précis avec des valeurs numériques concrètes
-- Pas de corrigé, uniquement les énoncés
-- Style académique sobre, formulation soignée
+RÈGLES IMPÉRATIVES :
+- Rédige des énoncés clairs, précis et complets, avec des valeurs numériques concrètes
+- Utilise un registre académique sobre, conforme aux sujets officiels du collège
+- Numérotation stricte : chaque exercice commence par "Exercice N :" (N = numéro)
+- Aucun corrigé, uniquement les énoncés
+- Aucun emoji, aucun symbole markdown (pas d'astérisques, tirets de liste, etc.)
 - Une ligne vide entre chaque exercice
+- Les exercices doivent être variés, ni trop similaires entre eux
 
-Réponds uniquement avec les énoncés des exercices, sans introduction ni conclusion.`;
+Commence directement par "Exercice 1 :" sans introduction.`;
 
   try {
-    const resp = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
+        model: 'claude-opus-4-6',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }]
       })
     });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Erreur API ' + resp.status);
+    }
+
     const data = await resp.json();
     const text = data.content?.map(b => b.text || '').join('') || '';
 
-    const tagClass = { easy: 'tag-easy-s', medium: 'tag-medium-s', hard: 'tag-hard-s' };
-    const tagLabel = { easy: 'Remédiation', medium: 'Consolidation', hard: 'Approfondissement' };
+    const exercises = text.split(/\n(?=Exercice \d+\s*:)/i).filter(e => e.trim());
 
-    const exercises = text.split(/\n(?=Exercice \d)/i).filter(e => e.trim());
-    const exHtml = exercises.map(ex => {
+    let bodyHtml = '';
+    exercises.forEach(ex => {
       const lines = ex.trim().split('\n');
-      const title = lines[0];
-      const body = lines.slice(1).join('<br>').trim();
-      return `<div class="exercise">
-        <div class="ex-header"><div class="ex-badge">${title}</div></div>
-        <div class="ex-text">${body}</div>
-        <div class="ex-work"></div>
-      </div>`;
-    }).join('');
+      const firstLine = lines[0];
+      const rest = lines.slice(1).join('\n').trim();
+      bodyHtml += `
+        <div class="exercise-item">
+          <div class="ex-num">${firstLine}</div>
+          <div class="ex-enonce">${rest.replace(/\n/g, '<br>')}</div>
+          <div class="ex-espace"></div>
+        </div>`;
+    });
 
-    document.getElementById('subject-box').innerHTML = `
-      <div class="subject-top">
-        <div class="subject-top-row">
-          <div>
-            <div class="subject-classe">Classe de ${niveau}ème — Mathématiques</div>
-            <div class="subject-titre">${[...notions].join(', ')}<span class="tag-diff ${tagClass[diff]}">${tagLabel[diff]}</span></div>
-          </div>
-          <div class="subject-meta">Date : ${today}<br>${nbex} exercice(s)</div>
-        </div>
-      </div>
-      <div class="subject-student">
-        <div class="sfield"><div class="sfield-label">Nom et prénom</div></div>
-        <div class="sfield"><div class="sfield-label">Note</div></div>
-      </div>
-      <div class="exercises">${exHtml || '<div style="color:var(--text-muted);font-size:13px;padding:1rem 0">' + text + '</div>'}</div>`;
+    document.getElementById('s-titre').textContent = `Classe de ${niveau}ème`;
+    document.getElementById('s-notions').textContent = notionsList;
+    document.getElementById('s-date').textContent = 'Date : ' + today + '  —  ' + nbex + ' exercice(s)';
+    document.getElementById('s-badge').innerHTML = `<span class="badge-diff ${badgeClass[diff]}">${diffBadge[diff]}</span>`;
+    document.getElementById('sujet-body').innerHTML = bodyHtml;
 
-    document.getElementById('print-btn').style.display = 'flex';
-    document.getElementById('step4').className = 'step done';
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('result-card').style.display = 'block';
+    document.getElementById('dot4').className = 'step-dot done';
+    document.getElementById('result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('Sujet généré avec succès !');
+
   } catch (e) {
-    document.getElementById('subject-box').innerHTML = '<div class="loading-box">Une erreur est survenue. Veuillez réessayer.</div>';
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('placeholder').style.display = 'flex';
+    document.getElementById('placeholder').innerHTML = `
+      <div class="ico-big">⚠️</div>
+      <div style="font-weight:600;color:#991b1b">Erreur de génération</div>
+      <div style="font-size:12px;color:#6b7280;max-width:300px;line-height:1.6">${e.message}</div>
+      <div style="font-size:12px;color:#6b7280">Vérifiez votre clé API et réessayez.</div>`;
+    toast('Erreur : ' + e.message);
   }
 }
-
-function printSubject() {
-  const content = document.getElementById('subject-box').innerHTML;
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Sujet de mathématiques</title><style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Georgia,serif;font-size:12pt;color:#1a1a1a;padding:2.2cm 2.8cm;line-height:1.65}
-    .subject-top{background:#185FA5;padding:1rem 1.5rem;color:#fff;border-radius:6px 6px 0 0;margin-bottom:0}
-    .subject-classe{font-size:9pt;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
-    .subject-titre{font-size:14pt;font-weight:bold;color:#fff}
-    .subject-top-row{display:flex;justify-content:space-between;align-items:flex-start}
-    .subject-meta{font-size:9pt;color:#B5D4F4;text-align:right;line-height:1.8}
-    .tag-diff{display:inline-block;padding:2px 8px;border:1px solid #aaa;border-radius:8px;font-size:9pt;margin-left:6px;font-family:Arial,sans-serif;font-weight:normal}
-    .tag-easy-s{color:#085041;border-color:#5DCAA5}
-    .tag-medium-s{color:#633806;border-color:#EF9F27}
-    .tag-hard-s{color:#712B13;border-color:#F0997B}
-    .subject-student{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:14px 1.5rem;border-bottom:1px solid #ddd}
-    .sfield{border-bottom:1px solid #999;padding-bottom:2px}
-    .sfield-label{font-size:9pt;color:#888;margin-bottom:24px;font-family:Arial,sans-serif}
-    .exercises{padding:.5rem 1.5rem 1.5rem}
-    .exercise{padding:14px 0;border-bottom:1px solid #eee;page-break-inside:avoid}
-    .exercise:last-child{border-bottom:none}
-    .ex-badge{display:inline-block;background:#E6F1FB;color:#0C447C;font-size:8pt;font-weight:bold;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-family:Arial,sans-serif}
-    .ex-text{font-size:12pt;line-height:1.7}
-    .ex-work{margin-top:10px;border:1px dashed #ccc;padding:8px;min-height:65px}
-  </style></head><body>${content}</body></html>`);
-  win.document.close();
-  win.focus();
-  setTimeout(() => win.print(), 400);
-}
 </script>
+</body>
+</html>
